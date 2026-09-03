@@ -6,6 +6,7 @@ from pathlib import Path
 from app.engines.shap_explainer import explainer
 from app.engines.nlg_engine import nlg_engine
 from app.engines.relocation_engine import relocation_engine
+from app.engines.path_selector import path_selector
 from app.cache import cache_response, invalidate_cache
 
 router = APIRouter()
@@ -485,6 +486,105 @@ def data_sources():
             "F": "Flood Wave Index weightage (1-3)",
             "ranking": "I (>=40), II (20-39), III (1-19)",
         },
+    }
+
+
+@router.get("/evacuation/{habitation_name}", tags=["Evacuation"])
+def evacuation_routes(habitation_name: str):
+    """Get safe evacuation routes from a red-zone habitation to all ranked relocation sites.
+
+    Returns routes with distance, duration, safety assessment, and logistics.
+    """
+    data = load_data()
+    hab = None
+    for h in data["habitations"]:
+        if h["name"].lower() == habitation_name.lower():
+            hab = h
+            break
+
+    if not hab:
+        raise HTTPException(404, f"Habitation '{habitation_name}' not found")
+
+    sites = [s for s in data["relocation_sites"] if s["habitation"] == hab["name"]]
+    ranked = relocation_engine.rank_sites(hab, sites)
+
+    routes = []
+    for site in ranked:
+        origin = {"lat": hab["lat"], "lon": hab["lon"]}
+        dest = {"lat": site["lat"], "lon": site["lon"]}
+        route = path_selector.get_route(origin, dest)
+        safety = path_selector.check_road_safety(route.get("geometry", {})) if route.get("status") == "success" else {}
+
+        population = hab.get("population", 0)
+        buses_needed = max(1, population // 50)
+        trips_needed = max(1, buses_needed // 3)
+
+        routes.append({
+            "site": site["name"],
+            "suitability_score": site["suitability_score"],
+            "carrying_capacity": site.get("carrying_capacity", {}),
+            "route": route,
+            "safety": safety,
+            "logistics": {
+                "population": population,
+                "buses_needed": buses_needed,
+                "trips_needed": trips_needed,
+                "total_distance_km": round(route.get("distance_km", 0) * trips_needed, 2) if route.get("status") == "success" else 0,
+                "estimated_hours": round(route.get("duration_hours", 0) * trips_needed, 1) if route.get("status") == "success" else 0,
+            },
+        })
+
+    routes.sort(key=lambda x: x["suitability_score"], reverse=True)
+
+    return {
+        "habitation": hab["name"],
+        "risk_band": hab["risk"]["band"],
+        "risk_score": hab["risk"]["overall"],
+        "population": hab.get("population", 0),
+        "origin": {"lat": hab["lat"], "lon": hab["lon"]},
+        "routes": routes,
+    }
+
+
+@router.get("/evacuation/{habitation_name}/routes/{site_name}", tags=["Evacuation"])
+def evacuation_route_detail(habitation_name: str, site_name: str):
+    """Get detailed route with turn-by-turn directions for a specific relocation site."""
+    data = load_data()
+    hab = None
+    for h in data["habitations"]:
+        if h["name"].lower() == habitation_name.lower():
+            hab = h
+            break
+
+    if not hab:
+        raise HTTPException(404, f"Habitation '{habitation_name}' not found")
+
+    site = None
+    for s in data["relocation_sites"]:
+        if s["habitation"] == hab["name"] and s["name"].lower() == site_name.lower():
+            site = s
+            break
+
+    if not site:
+        raise HTTPException(404, f"Site '{site_name}' not found for habitation '{habitation_name}'")
+
+    origin = {"lat": hab["lat"], "lon": hab["lon"]}
+    dest = {"lat": site["lat"], "lon": site["lon"]}
+
+    route = path_selector.get_route(origin, dest)
+    routes_alt = path_selector.find_multiple_routes(origin, dest)
+    safety = path_selector.check_road_safety(route.get("geometry", {})) if route.get("status") == "success" else {}
+    evacuation_plan = path_selector.plan_evacuation(hab, site)
+
+    return {
+        "habitation": hab["name"],
+        "site": site["name"],
+        "origin": origin,
+        "destination": dest,
+        "primary_route": route,
+        "alternative_routes": routes_alt,
+        "safety": safety,
+        "evacuation_plan": evacuation_plan,
     }
 
 

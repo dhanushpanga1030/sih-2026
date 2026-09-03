@@ -44,6 +44,10 @@ app = FastAPI(
             "description": "ML model information and training status",
         },
         {
+            "name": "Evacuation",
+            "description": "Safe route planning from red zones to safe relocation sites",
+        },
+        {
             "name": "Monitoring",
             "description": "System health and metrics",
         },

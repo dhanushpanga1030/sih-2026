@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer } from 'recharts'
 import RiskBadge from '../components/RiskBadge'
 import MapView from '../components/MapView'
@@ -7,6 +7,7 @@ import SHAPWaterfall from '../components/SHAPWaterfall'
 
 export default function HabitationDetail() {
   const { name } = useParams()
+  const navigate = useNavigate()
   const [hab, setHab] = useState<any>(null)
   const [explanation, setExplanation] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -47,6 +48,15 @@ export default function HabitationDetail() {
       <div className="flex items-center gap-4">
         <h1 className="text-2xl font-bold">{hab.name}</h1>
         <RiskBadge band={hab.risk.band} />
+        {hab.risk.band === 'immediate' && (
+          <button
+            onClick={() => navigate(`/evacuation/${encodeURIComponent(hab.name)}`)}
+            className="bg-red-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-red-700 flex items-center gap-1.5"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            Find Safe Routes
+          </button>
+        )}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -115,7 +125,15 @@ export default function HabitationDetail() {
       )}
 
       <div className="bg-white rounded-lg border p-4">
-        <h2 className="font-semibold mb-3">Relocation Site Candidates</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-semibold">Relocation Site Candidates</h2>
+          <button
+            onClick={() => navigate(`/evacuation/${encodeURIComponent(hab.name)}`)}
+            className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+          >
+            Find Safe Routes
+          </button>
+        </div>
         {hab.relocation_sites?.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
