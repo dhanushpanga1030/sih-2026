@@ -11,6 +11,7 @@ export default function Header() {
         <nav className="flex gap-4 text-sm">
           <Link to="/" className="hover:text-blue-600">State Overview</Link>
           <Link to="/scenario" className="hover:text-blue-600">Scenario Simulation</Link>
+          <Link to="/reports" className="hover:text-blue-600">Reports</Link>
         </nav>
       </div>
     </header>

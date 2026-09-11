@@ -5,6 +5,7 @@ import DistrictView from './pages/DistrictView'
 import HabitationDetail from './pages/HabitationDetail'
 import ScenarioSim from './pages/ScenarioSim'
 import EvacuationRoute from './pages/EvacuationRoute'
+import Reports from './pages/Reports'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/habitation/:name" element={<HabitationDetail />} />
           <Route path="/scenario" element={<ScenarioSim />} />
           <Route path="/evacuation/:name" element={<EvacuationRoute />} />
+          <Route path="/reports" element={<Reports />} />
         </Routes>
       </main>
     </BrowserRouter>
