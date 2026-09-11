@@ -65,8 +65,7 @@ class NLGEngine:
         elif risk_data.get("contributing_factors"):
             lines.append("**Primary contributing factors:**")
             sorted_factors = sorted(
-                risk_data["contributing_factors"].items(),
-                key=lambda x: x[1], reverse=True
+                risk_data["contributing_factors"].items(), key=lambda x: x[1], reverse=True
             )
             for factor, value in sorted_factors[:3]:
                 desc = self.HAZARD_DESCRIPTIONS.get(factor) or self.VULN_DESCRIPTIONS.get(factor)
@@ -74,7 +73,9 @@ class NLGEngine:
                     lines.append(f"- {desc} (contribution: {value:.1%})")
 
         lines.append("")
-        lines.append(f"**Recommended action:** {self.BAND_DESCRIPTIONS.get(band, 'assess further')}.")
+        lines.append(
+            f"**Recommended action:** {self.BAND_DESCRIPTIONS.get(band, 'assess further')}."
+        )
         lines.append("")
         lines.append(
             "This is an AI-generated recommendation. Final relocation decisions rest with authorized officials."
@@ -117,11 +118,15 @@ class NLGEngine:
 
         lines.append("")
         if verdict == "sufficient":
-            lines.append(f"✅ **Carrying capacity:** Site can accommodate {incoming:,} incoming residents "
-                        f"(available capacity: {available:,}).")
+            lines.append(
+                f"✅ **Carrying capacity:** Site can accommodate {incoming:,} incoming residents "
+                f"(available capacity: {available:,})."
+            )
         else:
-            lines.append(f"❌ **Carrying capacity:** Site cannot fully accommodate {incoming:,} incoming residents "
-                        f"(available capacity: {available:,}). Additional sites may be needed.")
+            lines.append(
+                f"❌ **Carrying capacity:** Site cannot fully accommodate {incoming:,} incoming residents "
+                f"(available capacity: {available:,}). Additional sites may be needed."
+            )
 
         lines.append("")
         lines.append(

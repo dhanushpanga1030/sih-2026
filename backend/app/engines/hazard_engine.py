@@ -3,9 +3,11 @@
 Computes flood and landslide susceptibility using trained ML models.
 Falls back to deterministic rules if models aren't loaded.
 """
+
 import pickle
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 MODEL_DIR = Path(__file__).parent.parent / "models"
 
@@ -28,7 +30,11 @@ class HazardEngine:
                 feature_vec = np.array([[features.get(k, 0) for k in self.models["feature_names"]]])
                 score = float(self.models["flood_model"].predict(feature_vec)[0])
                 confidence = self._estimate_confidence(features, "flood")
-                return {"score": round(min(max(score, 0), 1), 3), "confidence": confidence, "method": "xgboost"}
+                return {
+                    "score": round(min(max(score, 0), 1), 3),
+                    "confidence": confidence,
+                    "method": "xgboost",
+                }
             except Exception:
                 pass
 
@@ -41,13 +47,19 @@ class HazardEngine:
                 feature_vec = np.array([[features.get(k, 0) for k in self.models["feature_names"]]])
                 score = float(self.models["landslide_model"].predict(feature_vec)[0])
                 confidence = self._estimate_confidence(features, "landslide")
-                return {"score": round(min(max(score, 0), 1), 3), "confidence": confidence, "method": "random_forest"}
+                return {
+                    "score": round(min(max(score, 0), 1), 3),
+                    "confidence": confidence,
+                    "method": "random_forest",
+                }
             except Exception:
                 pass
 
         return self._fallback_landslide(features)
 
-    def combine_hazard(self, flood: float, landslide: float, seismic: float, erosion: float) -> dict:
+    def combine_hazard(
+        self, flood: float, landslide: float, seismic: float, erosion: float
+    ) -> dict:
         """Combine sub-hazard scores into overall hazard score."""
         combined = 0.35 * flood + 0.25 * landslide + 0.25 * seismic + 0.15 * erosion
         return {
@@ -73,21 +85,29 @@ class HazardEngine:
     def _fallback_flood(self, features: dict) -> dict:
         """Deterministic fallback for flood scoring."""
         score = (
-            0.3 * (features.get("rainfall_mm", 1500) / 3000) +
-            0.3 * (1 - min(features.get("river_dist_km", 10) / 20, 1)) +
-            0.2 * (features.get("slope", 10) / 45) +
-            0.2 * features.get("flood_history", 0.3)
+            0.3 * (features.get("rainfall_mm", 1500) / 3000)
+            + 0.3 * (1 - min(features.get("river_dist_km", 10) / 20, 1))
+            + 0.2 * (features.get("slope", 10) / 45)
+            + 0.2 * features.get("flood_history", 0.3)
         )
-        return {"score": round(min(max(score, 0), 1), 3), "confidence": 0.65, "method": "deterministic"}
+        return {
+            "score": round(min(max(score, 0), 1), 3),
+            "confidence": 0.65,
+            "method": "deterministic",
+        }
 
     def _fallback_landslide(self, features: dict) -> dict:
         """Deterministic fallback for landslide scoring."""
         score = (
-            0.4 * (features.get("slope", 10) / 45) +
-            0.3 * (features.get("rainfall_mm", 1500) / 3000) +
-            0.3 * features.get("landslide_history", 0.2)
+            0.4 * (features.get("slope", 10) / 45)
+            + 0.3 * (features.get("rainfall_mm", 1500) / 3000)
+            + 0.3 * features.get("landslide_history", 0.2)
         )
-        return {"score": round(min(max(score, 0), 1), 3), "confidence": 0.65, "method": "deterministic"}
+        return {
+            "score": round(min(max(score, 0), 1), 3),
+            "confidence": 0.65,
+            "method": "deterministic",
+        }
 
 
 hazard_engine = HazardEngine()

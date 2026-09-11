@@ -7,13 +7,11 @@ Fetches and normalizes data from:
 - Census of India — Population data
 - CWC — River gauge data
 """
-import json
-import csv
-import httpx
-from pathlib import Path
+
 from datetime import datetime
-from typing import Optional
-import xml.etree.ElementTree as ET
+from pathlib import Path
+
+import httpx
 
 DATA_DIR = Path(__file__).parent.parent.parent / "data"
 
@@ -23,7 +21,7 @@ class BhuvanFetcher:
 
     BASE_URL = "https://bhuvan.nrsc.gov.in/bhuvan_gos"
 
-    def get_dem(self, bbox: dict) -> Optional[dict]:
+    def get_dem(self, bbox: dict) -> dict | None:
         """Fetch DEM data for a bounding box."""
         # Bhuvan WMS endpoint for DEM
         params = {
@@ -39,7 +37,7 @@ class BhuvanFetcher:
         }
         return self._fetch("dem", params)
 
-    def get_flood_hazard(self, district: str) -> Optional[dict]:
+    def get_flood_hazard(self, district: str) -> dict | None:
         """Fetch flood hazard layer for a district."""
         # NRSC flood hazard API
         params = {
@@ -55,7 +53,7 @@ class BhuvanFetcher:
         }
         return self._fetch(f"flood_{district}", params)
 
-    def _fetch(self, name: str, params: dict) -> Optional[dict]:
+    def _fetch(self, name: str, params: dict) -> dict | None:
         try:
             with httpx.Client(timeout=30) as client:
                 resp = client.get(self.BASE_URL, params=params)
@@ -71,7 +69,7 @@ class IMDFetcher:
 
     BASE_URL = "https://api.imd.gov.in"
 
-    def get_daily_rainfall(self, district: str, date: str = None) -> Optional[dict]:
+    def get_daily_rainfall(self, district: str, date: str = None) -> dict | None:
         """Fetch daily rainfall data."""
         if date is None:
             date = datetime.now().strftime("%Y-%m-%d")
@@ -79,8 +77,7 @@ class IMDFetcher:
         try:
             with httpx.Client(timeout=30) as client:
                 resp = client.get(
-                    f"{self.BASE_URL}/public/rainfall",
-                    params={"district": district, "date": date}
+                    f"{self.BASE_URL}/public/rainfall", params={"district": district, "date": date}
                 )
                 if resp.status_code == 200:
                     return resp.json()
@@ -88,15 +85,24 @@ class IMDFetcher:
             pass
         return None
 
-    def get_climatology(self, station: str) -> Optional[dict]:
+    def get_climatology(self, station: str) -> dict | None:
         """Fetch monthly climatology for a station."""
         # IMD climatology data (historical averages)
         return {
             "station": station,
             "monthly_rainfall_mm": {
-                "jan": 10, "feb": 20, "mar": 50, "apr": 150,
-                "may": 250, "jun": 350, "jul": 400, "aug": 350,
-                "sep": 250, "oct": 100, "nov": 20, "dec": 5,
+                "jan": 10,
+                "feb": 20,
+                "mar": 50,
+                "apr": 150,
+                "may": 250,
+                "jun": 350,
+                "jul": 400,
+                "aug": 350,
+                "sep": 250,
+                "oct": 100,
+                "nov": 20,
+                "dec": 5,
             },
             "annual_avg_mm": 1955,
             "source": "IMD Climatology",
@@ -113,9 +119,9 @@ class OSMFetcher:
         query = f"""
         [out:json][timeout:60];
         (
-          node["amenity"="hospital"]({bbox['south']},{bbox['west']},{bbox['north']},{bbox['east']});
-          node["amenity"="clinic"]({bbox['south']},{bbox['west']},{bbox['north']},{bbox['east']});
-          node["amenity"="health_centre"]({bbox['south']},{bbox['west']},{bbox['north']},{bbox['east']});
+          node["amenity"="hospital"]({bbox["south"]},{bbox["west"]},{bbox["north"]},{bbox["east"]});
+          node["amenity"="clinic"]({bbox["south"]},{bbox["west"]},{bbox["north"]},{bbox["east"]});
+          node["amenity"="health_centre"]({bbox["south"]},{bbox["west"]},{bbox["north"]},{bbox["east"]});
         );
         out body;
         """
@@ -126,7 +132,7 @@ class OSMFetcher:
         query = f"""
         [out:json][timeout:60];
         (
-          node["amenity"="school"]({bbox['south']},{bbox['west']},{bbox['north']},{bbox['east']});
+          node["amenity"="school"]({bbox["south"]},{bbox["west"]},{bbox["north"]},{bbox["east"]});
         );
         out body;
         """
@@ -137,7 +143,7 @@ class OSMFetcher:
         query = f"""
         [out:json][timeout:60];
         (
-          way["highway"~"motorway|trunk|primary|secondary"]({bbox['south']},{bbox['west']},{bbox['north']},{bbox['east']});
+          way["highway"~"motorway|trunk|primary|secondary"]({bbox["south"]},{bbox["west"]},{bbox["north"]},{bbox["east"]});
         );
         out body;
         """
@@ -148,8 +154,8 @@ class OSMFetcher:
         query = f"""
         [out:json][timeout:60];
         (
-          way["waterway"~"river|stream"]({bbox['south']},{bbox['west']},{bbox['north']},{bbox['east']});
-          relation["waterway"="river"]({bbox['south']},{bbox['west']},{bbox['north']},{bbox['east']});
+          way["waterway"~"river|stream"]({bbox["south"]},{bbox["west"]},{bbox["north"]},{bbox["east"]});
+          relation["waterway"="river"]({bbox["south"]},{bbox["west"]},{bbox["north"]},{bbox["east"]});
         );
         out body;
         """
@@ -160,7 +166,7 @@ class OSMFetcher:
         query = f"""
         [out:json][timeout:60];
         (
-          way["building"]({bbox['south']},{bbox['west']},{bbox['north']},{bbox['east']});
+          way["building"]({bbox["south"]},{bbox["west"]},{bbox["north"]},{bbox["east"]});
         );
         out body;
         """
@@ -182,7 +188,7 @@ class OSMFetcher:
 class CensusFetcher:
     """Fetch population data from Census of India."""
 
-    def get_district_population(self, district: str) -> Optional[dict]:
+    def get_district_population(self, district: str) -> dict | None:
         """Fetch district population data."""
         # Census 2011 data (publicly available)
         CENSUS_DATA = {
@@ -228,7 +234,7 @@ class CWCFetcher:
 
     BASE_URL = "https://cwc.gov.in"
 
-    def get_water_level(self, station: str) -> Optional[dict]:
+    def get_water_level(self, station: str) -> dict | None:
         """Fetch current water level at a gauge station."""
         try:
             with httpx.Client(timeout=30) as client:
@@ -239,7 +245,7 @@ class CWCFetcher:
             pass
         return None
 
-    def get_danger_levels(self, station: str) -> Optional[dict]:
+    def get_danger_levels(self, station: str) -> dict | None:
         """Fetch danger level for a gauge station."""
         return {
             "station": station,
@@ -288,7 +294,10 @@ class DataIngestionPipeline:
         # IMD rainfall
         rainfall = self.imd.get_climatology(district_name)
         if rainfall:
-            result["sources"]["imd"] = {"status": "success", "annual_avg": rainfall.get("annual_avg_mm")}
+            result["sources"]["imd"] = {
+                "status": "success",
+                "annual_avg": rainfall.get("annual_avg_mm"),
+            }
 
         # CWC gauge data
         gauge = self.cwc.get_danger_levels(district_name)

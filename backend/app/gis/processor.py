@@ -2,14 +2,14 @@
 
 Uses GeoPandas and Rasterio for spatial analysis.
 """
-import json
+
 from pathlib import Path
-from typing import Optional
+
 import geopandas as gpd
-from shapely.geometry import Point, shape
+import numpy as np
 import rasterio
 from rasterio.mask import mask
-import numpy as np
+from shapely.geometry import Point, shape
 
 
 class GISProcessor:
@@ -27,7 +27,9 @@ class GISProcessor:
         geometry = [Point(h["lon"], h["lat"]) for h in habitations]
         return gpd.GeoDataFrame(habitations, geometry=geometry, crs="EPSG:4326")
 
-    def calculate_distance_to_feature(self, hab_gdf: gpd.GeoDataFrame, feature_gdf: gpd.GeoDataFrame) -> list:
+    def calculate_distance_to_feature(
+        self, hab_gdf: gpd.GeoDataFrame, feature_gdf: gpd.GeoDataFrame
+    ) -> list:
         """Calculate distance from each habitation to nearest feature."""
         hab_projected = hab_gdf.to_crs(epsg=32646)
         feature_projected = feature_gdf.to_crs(epsg=32646)
@@ -55,11 +57,15 @@ class GISProcessor:
             slope = np.arctan(np.sqrt(dx**2 + dy**2)) * (180 / np.pi)
         return slope
 
-    def identify_flood_zones(self, hab_gdf: gpd.GeoDataFrame, river_gdf: gpd.GeoDataFrame, buffer_km: float = 2.0) -> gpd.GeoDataFrame:
+    def identify_flood_zones(
+        self, hab_gdf: gpd.GeoDataFrame, river_gdf: gpd.GeoDataFrame, buffer_km: float = 2.0
+    ) -> gpd.GeoDataFrame:
         """Identify habitations within flood zones of rivers."""
         river_projected = river_gdf.to_crs(epsg=32646)
         buffer_geom = river_projected.geometry.buffer(buffer_km * 1000)
-        flood_zone = gpd.GeoDataFrame(geometry=[buffer_geom.union_all()], crs="EPSG:32646").to_crs(epsg=4326)
+        flood_zone = gpd.GeoDataFrame(geometry=[buffer_geom.union_all()], crs="EPSG:32646").to_crs(
+            epsg=4326
+        )
         hab_in_flood = gpd.sjoin(hab_gdf, flood_zone, how="inner", predicate="within")
         return hab_in_flood
 
@@ -72,18 +78,28 @@ class GISProcessor:
             tri = np.sqrt(dx**2 + dy**2).mean()
         return tri
 
-    def clip_raster_to_district(self, raster_path: str, district_geom: dict, output_path: str) -> str:
+    def clip_raster_to_district(
+        self, raster_path: str, district_geom: dict, output_path: str
+    ) -> str:
         """Clip raster to district boundary."""
         geom = [shape(district_geom)]
         with rasterio.open(raster_path) as src:
             out_image, out_transform = mask(src, geom, crop=True)
             out_meta = src.meta.copy()
-            out_meta.update({"height": out_image.shape[1], "width": out_image.shape[2], "transform": out_transform})
+            out_meta.update(
+                {
+                    "height": out_image.shape[1],
+                    "width": out_image.shape[2],
+                    "transform": out_transform,
+                }
+            )
         with rasterio.open(output_path, "w", **out_meta) as dest:
             dest.write(out_image)
         return output_path
 
-    def get_habitation_features(self, hab_data: dict, dem_path: str = None, river_path: str = None) -> dict:
+    def get_habitation_features(
+        self, hab_data: dict, dem_path: str = None, river_path: str = None
+    ) -> dict:
         """Extract all GIS features for a habitation."""
         features = {
             "elevation": hab_data.get("elevation_m", 50),

@@ -1,13 +1,15 @@
-from fastapi import APIRouter, HTTPException, Query
-from pydantic import BaseModel
-from typing import Optional
 import json
 from pathlib import Path
-from app.engines.shap_explainer import explainer
-from app.engines.nlg_engine import nlg_engine
-from app.engines.relocation_engine import relocation_engine
-from app.engines.path_selector import path_selector
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
+
 from app.cache import cache_response, invalidate_cache
+from app.engines.nlg_engine import nlg_engine
+from app.engines.path_selector import path_selector
+from app.engines.relocation_engine import relocation_engine
+from app.engines.shap_explainer import explainer
+from app.routers.auth_router import require_role
 
 router = APIRouter()
 
@@ -69,7 +71,7 @@ class HabitationResponse(BaseModel):
 
 class ScenarioRequest(BaseModel):
     rainfall_delta: float = 20.0
-    habitation: Optional[str] = None
+    habitation: str | None = None
 
     class Config:
         json_schema_extra = {
@@ -195,9 +197,13 @@ def get_district(name: str):
             habitations = [h for h in data["habitations"] if h["district"] == d["name"]]
             return {
                 **d,
-                "habitations": sorted(habitations, key=lambda x: x["risk"]["overall"], reverse=True),
+                "habitations": sorted(
+                    habitations, key=lambda x: x["risk"]["overall"], reverse=True
+                ),
                 "total_population": sum(h["population"] for h in habitations),
-                "high_risk_count": len([h for h in habitations if h["risk"]["band"] == "immediate"]),
+                "high_risk_count": len(
+                    [h for h in habitations if h["risk"]["band"] == "immediate"]
+                ),
             }
     raise HTTPException(404, f"District '{name}' not found")
 
@@ -205,8 +211,11 @@ def get_district(name: str):
 @router.get("/habitations", tags=["Habitations"])
 @cache_response(ttl=300, prefix="habitations")
 def list_habitations(
-    district: Optional[str] = Query(None, description="Filter by district name"),
-    band: Optional[str] = Query(None, description="Filter by risk band: immediate, short_term, medium_term, monitor"),
+    district: str | None = Query(None, description="Filter by district name"),
+    band: str | None = Query(
+        None, description="Filter by risk band: immediate, short_term, medium_term, monitor"
+    ),
+    limit: int | None = Query(None, description="Limit number of results"),
 ):
     """List all habitations with optional filtering.
 
@@ -219,7 +228,10 @@ def list_habitations(
         hab = [h for h in hab if h["district"].lower() == district.lower()]
     if band:
         hab = [h for h in hab if h["risk"]["band"] == band]
-    return sorted(hab, key=lambda x: x["risk"]["overall"], reverse=True)
+    hab = sorted(hab, key=lambda x: x["risk"]["overall"], reverse=True)
+    if limit:
+        hab = hab[:limit]
+    return hab
 
 
 @router.get("/habitations/{name}", tags=["Habitations"])
@@ -247,7 +259,9 @@ def get_habitation(name: str):
     raise HTTPException(404, f"Habitation '{name}' not found")
 
 
-@router.get("/habitations/{name}/explain", response_model=ExplanationResponse, tags=["Explainability"])
+@router.get(
+    "/habitations/{name}/explain", response_model=ExplanationResponse, tags=["Explainability"]
+)
 def explain_habitation(name: str):
     """Get AI explanation for a habitation's risk score.
 
@@ -329,7 +343,10 @@ def explain_site_selection(habitation_name: str, site_name: str):
 
 
 @router.post("/scenario", tags=["Scenario"])
-def scenario_simulation(params: ScenarioRequest):
+def scenario_simulation(
+    params: ScenarioRequest,
+    user: dict = Depends(require_role("admin", "village_analyst")),
+):
     """Simulate what-if scenarios for rainfall changes.
 
     Adjust rainfall_delta (percentage change) to see how risk scores
@@ -347,11 +364,18 @@ def scenario_simulation(params: ScenarioRequest):
         old_flood = h["hazard"]["flood"]
         new_flood = min(1.0, old_flood * (1 + rainfall_delta * 0.01))
         old_combined = h["hazard"]["combined"]
-        new_combined = round(0.35 * new_flood + 0.25 * h["hazard"]["landslide"] +
-                           0.25 * h["hazard"]["seismic"] + 0.15 * h["hazard"]["erosion"], 2)
+        new_combined = round(
+            0.35 * new_flood
+            + 0.25 * h["hazard"]["landslide"]
+            + 0.25 * h["hazard"]["seismic"]
+            + 0.15 * h["hazard"]["erosion"],
+            2,
+        )
 
         old_risk = h["risk"]["overall"]
-        new_risk = round(0.4 * new_combined + 0.3 * h["vulnerability"]["combined"] + 0.3 * h["exposure"], 2)
+        new_risk = round(
+            0.4 * new_combined + 0.3 * h["vulnerability"]["combined"] + 0.3 * h["exposure"], 2
+        )
 
         if new_risk >= 0.65:
             new_band = "immediate"
@@ -366,28 +390,30 @@ def scenario_simulation(params: ScenarioRequest):
         features["flood_history"] = new_flood
         shap_data = explainer.explain_risk(features)
 
-        results.append({
-            "habitation": h["name"],
-            "district": h["district"],
-            "original": {
-                "flood_score": old_flood,
-                "hazard_score": old_combined,
-                "risk_score": old_risk,
-                "band": h["risk"]["band"],
-            },
-            "simulated": {
-                "flood_score": round(new_flood, 2),
-                "hazard_score": new_combined,
-                "risk_score": new_risk,
-                "band": new_band,
-            },
-            "risk_change": round(new_risk - old_risk, 3),
-            "band_changed": h["risk"]["band"] != new_band,
-            "shap_factors": shap_data.get("top_factors", []),
-        })
+        results.append(
+            {
+                "habitation": h["name"],
+                "district": h["district"],
+                "original": {
+                    "flood_score": old_flood,
+                    "hazard_score": old_combined,
+                    "risk_score": old_risk,
+                    "band": h["risk"]["band"],
+                },
+                "simulated": {
+                    "flood_score": round(new_flood, 2),
+                    "hazard_score": new_combined,
+                    "risk_score": new_risk,
+                    "band": new_band,
+                },
+                "risk_change": round(new_risk - old_risk, 3),
+                "band_changed": h["risk"]["band"] != new_band,
+                "shap_factors": shap_data.get("top_factors", []),
+            }
+        )
 
     results.sort(key=lambda x: x["risk_change"], reverse=True)
-    return {"scenario": params.dict(), "results": results}
+    return {"scenario": params.model_dump(), "results": results}
 
 
 @router.get("/map/habitations", tags=["Map"])
@@ -432,9 +458,11 @@ def map_relocation_sites():
 def model_info():
     """Return information about trained ML models."""
     from pathlib import Path
+
     model_path = Path(__file__).parent.parent / "models" / "trained_models.pkl"
     if model_path.exists():
         import pickle
+
         with open(model_path, "rb") as f:
             models = pickle.load(f)
         return {
@@ -452,10 +480,7 @@ def nrsc_flood_data():
     data = load_data()
     return {
         "metadata": data.get("nrsc_metadata", {}),
-        "districts": {
-            d["name"]: d.get("nrsc_flood_data", {})
-            for d in data["districts"]
-        },
+        "districts": {d["name"]: d.get("nrsc_flood_data", {}) for d in data["districts"]},
     }
 
 
@@ -513,26 +538,36 @@ def evacuation_routes(habitation_name: str):
         origin = {"lat": hab["lat"], "lon": hab["lon"]}
         dest = {"lat": site["lat"], "lon": site["lon"]}
         route = path_selector.get_route(origin, dest)
-        safety = path_selector.check_road_safety(route.get("geometry", {})) if route.get("status") == "success" else {}
+        safety = (
+            path_selector.check_road_safety(route.get("geometry", {}))
+            if route.get("status") == "success"
+            else {}
+        )
 
         population = hab.get("population", 0)
         buses_needed = max(1, population // 50)
         trips_needed = max(1, buses_needed // 3)
 
-        routes.append({
-            "site": site["name"],
-            "suitability_score": site["suitability_score"],
-            "carrying_capacity": site.get("carrying_capacity", {}),
-            "route": route,
-            "safety": safety,
-            "logistics": {
-                "population": population,
-                "buses_needed": buses_needed,
-                "trips_needed": trips_needed,
-                "total_distance_km": round(route.get("distance_km", 0) * trips_needed, 2) if route.get("status") == "success" else 0,
-                "estimated_hours": round(route.get("duration_hours", 0) * trips_needed, 1) if route.get("status") == "success" else 0,
-            },
-        })
+        routes.append(
+            {
+                "site": site["name"],
+                "suitability_score": site["suitability_score"],
+                "carrying_capacity": site.get("carrying_capacity", {}),
+                "route": route,
+                "safety": safety,
+                "logistics": {
+                    "population": population,
+                    "buses_needed": buses_needed,
+                    "trips_needed": trips_needed,
+                    "total_distance_km": round(route.get("distance_km", 0) * trips_needed, 2)
+                    if route.get("status") == "success"
+                    else 0,
+                    "estimated_hours": round(route.get("duration_hours", 0) * trips_needed, 1)
+                    if route.get("status") == "success"
+                    else 0,
+                },
+            }
+        )
 
     routes.sort(key=lambda x: x["suitability_score"], reverse=True)
 
@@ -573,7 +608,11 @@ def evacuation_route_detail(habitation_name: str, site_name: str):
 
     route = path_selector.get_route(origin, dest)
     routes_alt = path_selector.find_multiple_routes(origin, dest)
-    safety = path_selector.check_road_safety(route.get("geometry", {})) if route.get("status") == "success" else {}
+    safety = (
+        path_selector.check_road_safety(route.get("geometry", {}))
+        if route.get("status") == "success"
+        else {}
+    )
     evacuation_plan = path_selector.plan_evacuation(hab, site)
 
     return {
@@ -592,12 +631,16 @@ def evacuation_route_detail(habitation_name: str, site_name: str):
 def cache_stats():
     """Get Redis cache hit/miss statistics."""
     from app.cache import cache_stats as get_cache_stats
+
     return get_cache_stats()
 
 
 @router.post("/cache/invalidate", tags=["Monitoring"])
-def invalidate_cache_endpoint(pattern: str = "api:*"):
+def invalidate_cache_endpoint(
+    pattern: str = "api:*",
+    user: dict = Depends(require_role("admin")),
+):
     """Invalidate cache entries matching pattern."""
-    from app.cache import invalidate_cache
+
     invalidate_cache(pattern)
     return {"status": "invalidated", "pattern": pattern}

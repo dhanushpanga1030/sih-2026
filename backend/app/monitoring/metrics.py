@@ -2,9 +2,9 @@
 
 Exposes /metrics endpoint for monitoring.
 """
-from prometheus_client import Counter, Histogram, Gauge, generate_latest, CONTENT_TYPE_LATEST
+
 from fastapi import APIRouter, Response
-import time
+from prometheus_client import CONTENT_TYPE_LATEST, Counter, Gauge, Histogram, generate_latest
 
 router = APIRouter()
 
@@ -86,8 +86,9 @@ def metrics():
 @router.get("/health/detailed")
 def detailed_health():
     """Detailed health check with metrics."""
-    from app.database import engine
     from sqlalchemy import text
+
+    from app.database import engine
 
     db_ok = False
     try:

@@ -1,6 +1,8 @@
 """Celery configuration for background tasks."""
-from celery import Celery
+
 import os
+
+from celery import Celery
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
@@ -22,6 +24,7 @@ app.conf.update(
 def ingest_district_task(self, district_name: str, bbox: dict):
     """Background task for data ingestion."""
     from app.ingestion.real_data_pipeline import pipeline
+
     result = pipeline.ingest_district(district_name, bbox)
     return result
 
@@ -30,21 +33,18 @@ def ingest_district_task(self, district_name: str, bbox: dict):
 def retrain_models_task(self):
     """Background task for model retraining."""
     import subprocess
-    result = subprocess.run(
-        ["python", "-m", "app.ml.train"],
-        capture_output=True, text=True
-    )
+
+    result = subprocess.run(["python", "-m", "app.ml.train"], capture_output=True, text=True)
     return {"stdout": result.stdout, "stderr": result.stderr, "returncode": result.returncode}
 
 
 @app.task(bind=True, name="batch_risk_assessment")
 def batch_risk_assessment_task(self, district_id: int):
     """Background task for batch risk assessment."""
-    from sqlalchemy.orm import Session
     from app.database import SessionLocal
-    from app.models.spatial_models import Habitation
     from app.engines.hazard_engine import HazardEngine
     from app.engines.risk_engine import RiskEngine
+    from app.models.spatial_models import Habitation
 
     hazard_engine = HazardEngine()
     risk_engine = RiskEngine()
@@ -70,5 +70,6 @@ def batch_risk_assessment_task(self, district_id: int):
 def monitor_drift_task():
     """Scheduled task to check for data drift."""
     from app.monitoring.drift_monitor import monitor
+
     # Run drift checks
     return {"alerts": monitor.get_alerts()}

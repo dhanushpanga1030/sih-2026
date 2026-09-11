@@ -3,6 +3,7 @@
 Source: Flood Hazard Zonation Atlas of Assam (1998-2023)
 NRSC/ISRO & NDMA & ASDMA
 """
+
 import json
 from pathlib import Path
 
@@ -11,41 +12,391 @@ DATA_DIR = Path(__file__).parent
 # Table 5.3: District-wise villages under each hazard category
 # Table 5.4: District-wise Flood Hazard Ranking Index
 NRSC_FLOOD_DATA = {
-    "Bajali": {"very_high": 18, "high": 19, "moderate": 28, "low": 16, "very_low": 72, "ranking": "II", "index": 26, "gauge_station": None, "flood_waves": 26},
-    "Baksa": {"very_high": 1, "high": 9, "moderate": 21, "low": 12, "very_low": 311, "ranking": "III", "index": 16, "gauge_station": None, "flood_waves": 16},
-    "Barpeta": {"very_high": 129, "high": 105, "moderate": 87, "low": 32, "very_low": 160, "ranking": "I", "index": 57, "gauge_station": "NH R.d xing (Manas)", "flood_waves": 25},
-    "Biswanath": {"very_high": 47, "high": 29, "moderate": 44, "low": 37, "very_low": 184, "ranking": "III", "index": 16, "gauge_station": None, "flood_waves": 16},
-    "Bongaigaon": {"very_high": 51, "high": 20, "moderate": 31, "low": 19, "very_low": 351, "ranking": "III", "index": 16, "gauge_station": None, "flood_waves": 16},
-    "Cachar": {"very_high": 224, "high": 25, "moderate": 72, "low": 34, "very_low": 381, "ranking": "I", "index": 45, "gauge_station": "A.P. Ghat / B.P. Ghat", "flood_waves": 23},
-    "Charaideo": {"very_high": 4, "high": 5, "moderate": 24, "low": 13, "very_low": 262, "ranking": "III", "index": 19, "gauge_station": None, "flood_waves": 19},
-    "Chirang": {"very_high": 10, "high": 3, "moderate": 3, "low": 5, "very_low": 336, "ranking": "III", "index": 15, "gauge_station": None, "flood_waves": 15},
-    "Darrang": {"very_high": 50, "high": 23, "moderate": 40, "low": 44, "very_low": 317, "ranking": "III", "index": 18, "gauge_station": None, "flood_waves": 18},
-    "Dhemaji": {"very_high": 15, "high": 20, "moderate": 76, "low": 113, "very_low": 367, "ranking": "II", "index": 22, "gauge_station": "NH-52 RCC Bridge", "flood_waves": 22},
-    "Dhubri": {"very_high": 185, "high": 53, "moderate": 111, "low": 0, "very_low": 0, "ranking": "I", "index": 48, "gauge_station": "Dhubri / Golokganj", "flood_waves": 63},
-    "Dibrugarh": {"very_high": 97, "high": 56, "moderate": 146, "low": 94, "very_low": 863, "ranking": "I", "index": 48, "gauge_station": "Dibrugarh / Naharkatia / Khowang", "flood_waves": 116},
-    "Dima Hasao": {"very_high": 0, "high": 0, "moderate": 0, "low": 0, "very_low": 6, "ranking": "III", "index": 15, "gauge_station": None, "flood_waves": 15},
-    "Goalpara": {"very_high": 144, "high": 64, "moderate": 76, "low": 33, "very_low": 378, "ranking": "I", "index": 45, "gauge_station": "Goalpara", "flood_waves": 31},
-    "Golaghat": {"very_high": 35, "high": 37, "moderate": 40, "low": 31, "very_low": 412, "ranking": "I", "index": 51, "gauge_station": "Golaghat", "flood_waves": 39},
-    "Hailakandi": {"very_high": 59, "high": 8, "moderate": 8, "low": 16, "very_low": 194, "ranking": "I", "index": 48, "gauge_station": "Matizuri", "flood_waves": 54},
-    "Hojai": {"very_high": 63, "high": 21, "moderate": 62, "low": 24, "very_low": 121, "ranking": "II", "index": 21, "gauge_station": None, "flood_waves": 21},
-    "Jorhat": {"very_high": 39, "high": 13, "moderate": 46, "low": 35, "very_low": 287, "ranking": "I", "index": 54, "gauge_station": "Neamatighat", "flood_waves": 133},
-    "Kamrup Metro": {"very_high": 42, "high": 4, "moderate": 14, "low": 8, "very_low": 77, "ranking": "I", "index": 45, "gauge_station": "Guwahati D.C. Court", "flood_waves": 36},
-    "Kamrup Rural": {"very_high": 47, "high": 12, "moderate": 0, "low": 0, "very_low": 0, "ranking": "I", "index": 48, "gauge_station": "N.H.Rd xing (Puthimari)", "flood_waves": 81},
-    "Karbi Anglong": {"very_high": 0, "high": 0, "moderate": 0, "low": 0, "very_low": 3, "ranking": "III", "index": 15, "gauge_station": None, "flood_waves": 15},
-    "Karimganj": {"very_high": 117, "high": 34, "moderate": 30, "low": 46, "very_low": 201, "ranking": "I", "index": 48, "gauge_station": "Karimganj", "flood_waves": 58},
-    "Kokrajhar": {"very_high": 21, "high": 5, "moderate": 8, "low": 13, "very_low": 203, "ranking": "III", "index": 16, "gauge_station": "Kokrajhar", "flood_waves": 16},
-    "Lakhimpur": {"very_high": 56, "high": 63, "moderate": 107, "low": 92, "very_low": 651, "ranking": "I", "index": 44, "gauge_station": "Badatighat / Chouldhowa ghat", "flood_waves": 11},
-    "Majuli": {"very_high": 22, "high": 21, "moderate": 41, "low": 18, "very_low": 38, "ranking": "III", "index": 18, "gauge_station": None, "flood_waves": 18},
-    "Morigaon": {"very_high": 117, "high": 58, "moderate": 93, "low": 49, "very_low": 146, "ranking": "I", "index": 105, "gauge_station": "Dharamtul", "flood_waves": 26},
-    "Nagaon": {"very_high": 105, "high": 46, "moderate": 84, "low": 61, "very_low": 501, "ranking": "I", "index": 66, "gauge_station": "Kampur", "flood_waves": 42},
-    "Nalbari": {"very_high": 28, "high": 40, "moderate": 71, "low": 17, "very_low": 348, "ranking": "I", "index": 66, "gauge_station": "N.T.Rd.xing - Pagaladiya", "flood_waves": 28},
-    "Sivasagar": {"very_high": 89, "high": 7, "moderate": 29, "low": 18, "very_low": 113, "ranking": "I", "index": 81, "gauge_station": "Sibsagar / Nanglamor ghat", "flood_waves": 67},
-    "Sonitpur": {"very_high": 21, "high": 16, "moderate": 51, "low": 39, "very_low": 424, "ranking": "I", "index": 48, "gauge_station": "Tejpur / N.T.RD Xing", "flood_waves": 63},
-    "South Salmara": {"very_high": 34, "high": 20, "moderate": 37, "low": 0, "very_low": 0, "ranking": "II", "index": 25, "gauge_station": None, "flood_waves": 25},
-    "Tamulpur": {"very_high": 0, "high": 1, "moderate": 2, "low": 10, "very_low": 243, "ranking": "III", "index": 17, "gauge_station": None, "flood_waves": 17},
-    "Tinsukia": {"very_high": 4, "high": 8, "moderate": 23, "low": 35, "very_low": 451, "ranking": "III", "index": 17, "gauge_station": "Dolabazar", "flood_waves": 2},
-    "Udalguri": {"very_high": 0, "high": 0, "moderate": 14, "low": 14, "very_low": 597, "ranking": "III", "index": 17, "gauge_station": None, "flood_waves": 17},
-    "West Karbi Anglong": {"very_high": 0, "high": 0, "moderate": 0, "low": 0, "very_low": 3, "ranking": "III", "index": 15, "gauge_station": None, "flood_waves": 15},
+    "Bajali": {
+        "very_high": 18,
+        "high": 19,
+        "moderate": 28,
+        "low": 16,
+        "very_low": 72,
+        "ranking": "II",
+        "index": 26,
+        "gauge_station": None,
+        "flood_waves": 26,
+    },
+    "Baksa": {
+        "very_high": 1,
+        "high": 9,
+        "moderate": 21,
+        "low": 12,
+        "very_low": 311,
+        "ranking": "III",
+        "index": 16,
+        "gauge_station": None,
+        "flood_waves": 16,
+    },
+    "Barpeta": {
+        "very_high": 129,
+        "high": 105,
+        "moderate": 87,
+        "low": 32,
+        "very_low": 160,
+        "ranking": "I",
+        "index": 57,
+        "gauge_station": "NH R.d xing (Manas)",
+        "flood_waves": 25,
+    },
+    "Biswanath": {
+        "very_high": 47,
+        "high": 29,
+        "moderate": 44,
+        "low": 37,
+        "very_low": 184,
+        "ranking": "III",
+        "index": 16,
+        "gauge_station": None,
+        "flood_waves": 16,
+    },
+    "Bongaigaon": {
+        "very_high": 51,
+        "high": 20,
+        "moderate": 31,
+        "low": 19,
+        "very_low": 351,
+        "ranking": "III",
+        "index": 16,
+        "gauge_station": None,
+        "flood_waves": 16,
+    },
+    "Cachar": {
+        "very_high": 224,
+        "high": 25,
+        "moderate": 72,
+        "low": 34,
+        "very_low": 381,
+        "ranking": "I",
+        "index": 45,
+        "gauge_station": "A.P. Ghat / B.P. Ghat",
+        "flood_waves": 23,
+    },
+    "Charaideo": {
+        "very_high": 4,
+        "high": 5,
+        "moderate": 24,
+        "low": 13,
+        "very_low": 262,
+        "ranking": "III",
+        "index": 19,
+        "gauge_station": None,
+        "flood_waves": 19,
+    },
+    "Chirang": {
+        "very_high": 10,
+        "high": 3,
+        "moderate": 3,
+        "low": 5,
+        "very_low": 336,
+        "ranking": "III",
+        "index": 15,
+        "gauge_station": None,
+        "flood_waves": 15,
+    },
+    "Darrang": {
+        "very_high": 50,
+        "high": 23,
+        "moderate": 40,
+        "low": 44,
+        "very_low": 317,
+        "ranking": "III",
+        "index": 18,
+        "gauge_station": None,
+        "flood_waves": 18,
+    },
+    "Dhemaji": {
+        "very_high": 15,
+        "high": 20,
+        "moderate": 76,
+        "low": 113,
+        "very_low": 367,
+        "ranking": "II",
+        "index": 22,
+        "gauge_station": "NH-52 RCC Bridge",
+        "flood_waves": 22,
+    },
+    "Dhubri": {
+        "very_high": 185,
+        "high": 53,
+        "moderate": 111,
+        "low": 0,
+        "very_low": 0,
+        "ranking": "I",
+        "index": 48,
+        "gauge_station": "Dhubri / Golokganj",
+        "flood_waves": 63,
+    },
+    "Dibrugarh": {
+        "very_high": 97,
+        "high": 56,
+        "moderate": 146,
+        "low": 94,
+        "very_low": 863,
+        "ranking": "I",
+        "index": 48,
+        "gauge_station": "Dibrugarh / Naharkatia / Khowang",
+        "flood_waves": 116,
+    },
+    "Dima Hasao": {
+        "very_high": 0,
+        "high": 0,
+        "moderate": 0,
+        "low": 0,
+        "very_low": 6,
+        "ranking": "III",
+        "index": 15,
+        "gauge_station": None,
+        "flood_waves": 15,
+    },
+    "Goalpara": {
+        "very_high": 144,
+        "high": 64,
+        "moderate": 76,
+        "low": 33,
+        "very_low": 378,
+        "ranking": "I",
+        "index": 45,
+        "gauge_station": "Goalpara",
+        "flood_waves": 31,
+    },
+    "Golaghat": {
+        "very_high": 35,
+        "high": 37,
+        "moderate": 40,
+        "low": 31,
+        "very_low": 412,
+        "ranking": "I",
+        "index": 51,
+        "gauge_station": "Golaghat",
+        "flood_waves": 39,
+    },
+    "Hailakandi": {
+        "very_high": 59,
+        "high": 8,
+        "moderate": 8,
+        "low": 16,
+        "very_low": 194,
+        "ranking": "I",
+        "index": 48,
+        "gauge_station": "Matizuri",
+        "flood_waves": 54,
+    },
+    "Hojai": {
+        "very_high": 63,
+        "high": 21,
+        "moderate": 62,
+        "low": 24,
+        "very_low": 121,
+        "ranking": "II",
+        "index": 21,
+        "gauge_station": None,
+        "flood_waves": 21,
+    },
+    "Jorhat": {
+        "very_high": 39,
+        "high": 13,
+        "moderate": 46,
+        "low": 35,
+        "very_low": 287,
+        "ranking": "I",
+        "index": 54,
+        "gauge_station": "Neamatighat",
+        "flood_waves": 133,
+    },
+    "Kamrup Metro": {
+        "very_high": 42,
+        "high": 4,
+        "moderate": 14,
+        "low": 8,
+        "very_low": 77,
+        "ranking": "I",
+        "index": 45,
+        "gauge_station": "Guwahati D.C. Court",
+        "flood_waves": 36,
+    },
+    "Kamrup Rural": {
+        "very_high": 47,
+        "high": 12,
+        "moderate": 0,
+        "low": 0,
+        "very_low": 0,
+        "ranking": "I",
+        "index": 48,
+        "gauge_station": "N.H.Rd xing (Puthimari)",
+        "flood_waves": 81,
+    },
+    "Karbi Anglong": {
+        "very_high": 0,
+        "high": 0,
+        "moderate": 0,
+        "low": 0,
+        "very_low": 3,
+        "ranking": "III",
+        "index": 15,
+        "gauge_station": None,
+        "flood_waves": 15,
+    },
+    "Karimganj": {
+        "very_high": 117,
+        "high": 34,
+        "moderate": 30,
+        "low": 46,
+        "very_low": 201,
+        "ranking": "I",
+        "index": 48,
+        "gauge_station": "Karimganj",
+        "flood_waves": 58,
+    },
+    "Kokrajhar": {
+        "very_high": 21,
+        "high": 5,
+        "moderate": 8,
+        "low": 13,
+        "very_low": 203,
+        "ranking": "III",
+        "index": 16,
+        "gauge_station": "Kokrajhar",
+        "flood_waves": 16,
+    },
+    "Lakhimpur": {
+        "very_high": 56,
+        "high": 63,
+        "moderate": 107,
+        "low": 92,
+        "very_low": 651,
+        "ranking": "I",
+        "index": 44,
+        "gauge_station": "Badatighat / Chouldhowa ghat",
+        "flood_waves": 11,
+    },
+    "Majuli": {
+        "very_high": 22,
+        "high": 21,
+        "moderate": 41,
+        "low": 18,
+        "very_low": 38,
+        "ranking": "III",
+        "index": 18,
+        "gauge_station": None,
+        "flood_waves": 18,
+    },
+    "Morigaon": {
+        "very_high": 117,
+        "high": 58,
+        "moderate": 93,
+        "low": 49,
+        "very_low": 146,
+        "ranking": "I",
+        "index": 105,
+        "gauge_station": "Dharamtul",
+        "flood_waves": 26,
+    },
+    "Nagaon": {
+        "very_high": 105,
+        "high": 46,
+        "moderate": 84,
+        "low": 61,
+        "very_low": 501,
+        "ranking": "I",
+        "index": 66,
+        "gauge_station": "Kampur",
+        "flood_waves": 42,
+    },
+    "Nalbari": {
+        "very_high": 28,
+        "high": 40,
+        "moderate": 71,
+        "low": 17,
+        "very_low": 348,
+        "ranking": "I",
+        "index": 66,
+        "gauge_station": "N.T.Rd.xing - Pagaladiya",
+        "flood_waves": 28,
+    },
+    "Sivasagar": {
+        "very_high": 89,
+        "high": 7,
+        "moderate": 29,
+        "low": 18,
+        "very_low": 113,
+        "ranking": "I",
+        "index": 81,
+        "gauge_station": "Sibsagar / Nanglamor ghat",
+        "flood_waves": 67,
+    },
+    "Sonitpur": {
+        "very_high": 21,
+        "high": 16,
+        "moderate": 51,
+        "low": 39,
+        "very_low": 424,
+        "ranking": "I",
+        "index": 48,
+        "gauge_station": "Tejpur / N.T.RD Xing",
+        "flood_waves": 63,
+    },
+    "South Salmara": {
+        "very_high": 34,
+        "high": 20,
+        "moderate": 37,
+        "low": 0,
+        "very_low": 0,
+        "ranking": "II",
+        "index": 25,
+        "gauge_station": None,
+        "flood_waves": 25,
+    },
+    "Tamulpur": {
+        "very_high": 0,
+        "high": 1,
+        "moderate": 2,
+        "low": 10,
+        "very_low": 243,
+        "ranking": "III",
+        "index": 17,
+        "gauge_station": None,
+        "flood_waves": 17,
+    },
+    "Tinsukia": {
+        "very_high": 4,
+        "high": 8,
+        "moderate": 23,
+        "low": 35,
+        "very_low": 451,
+        "ranking": "III",
+        "index": 17,
+        "gauge_station": "Dolabazar",
+        "flood_waves": 2,
+    },
+    "Udalguri": {
+        "very_high": 0,
+        "high": 0,
+        "moderate": 14,
+        "low": 14,
+        "very_low": 597,
+        "ranking": "III",
+        "index": 17,
+        "gauge_station": None,
+        "flood_waves": 17,
+    },
+    "West Karbi Anglong": {
+        "very_high": 0,
+        "high": 0,
+        "moderate": 0,
+        "low": 0,
+        "very_low": 3,
+        "ranking": "III",
+        "index": 15,
+        "gauge_station": None,
+        "flood_waves": 15,
+    },
 }
 
 # Table 5.1: Overall flood hazard statistics
@@ -72,17 +423,19 @@ def compute_flood_risk_score(district_name: str) -> dict:
     if not data:
         return {"flood_risk": 0.3, "confidence": 0.5, "method": "no_data"}
 
-    total_villages = data["very_high"] + data["high"] + data["moderate"] + data["low"] + data["very_low"]
+    total_villages = (
+        data["very_high"] + data["high"] + data["moderate"] + data["low"] + data["very_low"]
+    )
     if total_villages == 0:
         return {"flood_risk": 0.1, "confidence": 0.4, "method": "no_villages"}
 
     # Weighted flood risk: very_high=1.0, high=0.8, moderate=0.5, low=0.3, very_low=0.1
     weighted = (
-        data["very_high"] * 1.0 +
-        data["high"] * 0.8 +
-        data["moderate"] * 0.5 +
-        data["low"] * 0.3 +
-        data["very_low"] * 0.1
+        data["very_high"] * 1.0
+        + data["high"] * 0.8
+        + data["moderate"] * 0.5
+        + data["low"] * 0.3
+        + data["very_low"] * 0.1
     )
     flood_risk = round(weighted / total_villages, 3)
 
@@ -129,16 +482,20 @@ def update_assam_data():
 
                 # Recompute combined hazard
                 hab["hazard"]["combined"] = round(
-                    0.35 * new_flood + 0.25 * hab["hazard"]["landslide"] +
-                    0.25 * hab["hazard"]["seismic"] + 0.15 * hab["hazard"]["erosion"], 3
+                    0.35 * new_flood
+                    + 0.25 * hab["hazard"]["landslide"]
+                    + 0.25 * hab["hazard"]["seismic"]
+                    + 0.15 * hab["hazard"]["erosion"],
+                    3,
                 )
 
                 # Recompute risk
                 old_risk = hab["risk"]["overall"]
                 new_risk = round(
-                    0.4 * hab["hazard"]["combined"] +
-                    0.3 * hab["vulnerability"]["combined"] +
-                    0.3 * hab["exposure"], 3
+                    0.4 * hab["hazard"]["combined"]
+                    + 0.3 * hab["vulnerability"]["combined"]
+                    + 0.3 * hab["exposure"],
+                    3,
                 )
                 hab["risk"]["overall"] = new_risk
 

@@ -2,13 +2,13 @@
 
 Loads secrets from environment, .env file, or AWS Secrets Manager.
 """
-import os
+
 import json
-from pathlib import Path
+import os
 from functools import lru_cache
+from pathlib import Path
+
 from pydantic_settings import BaseSettings
-from pydantic import Field
-from typing import Optional
 
 
 class Settings(BaseSettings):
@@ -51,7 +51,7 @@ class Settings(BaseSettings):
         env_file_encoding = "utf-8"
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     return Settings()
 
@@ -60,8 +60,11 @@ def load_secrets_from_aws() -> dict:
     """Load secrets from AWS Secrets Manager."""
     try:
         import boto3
+
         client = boto3.client("secretsmanager", region_name=os.getenv("AWS_REGION", "ap-south-1"))
-        response = client.get_secret_value(SecretId=os.getenv("AWS_SECRETS_NAME", "safehabitat/prod"))
+        response = client.get_secret_value(
+            SecretId=os.getenv("AWS_SECRETS_NAME", "safehabitat/prod")
+        )
         return json.loads(response["SecretString"])
     except Exception:
         return {}

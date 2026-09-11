@@ -3,15 +3,26 @@
 Production database schema with spatial indexing, audit trails,
 and data source tracking.
 """
+
+import enum
+
+from geoalchemy2 import Geometry
 from sqlalchemy import (
-    Column, Integer, String, Float, JSON, DateTime, Boolean,
-    ForeignKey, Text, Enum as SQLEnum, Index, UniqueConstraint
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from geoalchemy2 import Geometry
+
 from app.database import Base
-import enum
 
 
 class PriorityBand(str, enum.Enum):
@@ -99,7 +110,9 @@ class Habitation(Base, AuditMixin):
 
     district = relationship("District", back_populates="habitations")
     hazard_scores = relationship("HazardScore", back_populates="habitation", uselist=False)
-    vulnerability_scores = relationship("VulnerabilityScore", back_populates="habitation", uselist=False)
+    vulnerability_scores = relationship(
+        "VulnerabilityScore", back_populates="habitation", uselist=False
+    )
     risk_score = relationship("RiskScore", back_populates="habitation", uselist=False)
     relocation_sites = relationship("RelocationSite", back_populates="habitation")
     explanations = relationship("Explanation", back_populates="habitation")
@@ -136,9 +149,7 @@ class HazardScore(Base, AuditMixin):
 
     habitation = relationship("Habitation", back_populates="hazard_scores")
 
-    __table_args__ = (
-        Index("idx_hazard_habitation", "habitation_id"),
-    )
+    __table_args__ = (Index("idx_hazard_habitation", "habitation_id"),)
 
 
 class VulnerabilityScore(Base, AuditMixin):
@@ -195,9 +206,7 @@ class RelocationSite(Base, AuditMixin):
 
     habitation = relationship("Habitation", back_populates="relocation_sites")
 
-    __table_args__ = (
-        Index("idx_relocation_geom", "geom", postgresql_using="gist"),
-    )
+    __table_args__ = (Index("idx_relocation_geom", "geom", postgresql_using="gist"),)
 
 
 class Explanation(Base, AuditMixin):

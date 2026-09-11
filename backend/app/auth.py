@@ -2,13 +2,15 @@
 
 Password hashing, JWT tokens, and role-based access control.
 """
+
 from datetime import datetime, timedelta
-from typing import Optional
+
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.models.spatial_models import User, UserRole
 
@@ -28,7 +30,7 @@ def verify_password(plain: str, hashed: str) -> bool:
     return pwd_context.verify(plain, hashed)
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
@@ -59,14 +61,30 @@ def require_role(*roles: UserRole):
         if user.role not in [r.value for r in roles]:
             raise HTTPException(status_code=403, detail="Insufficient permissions")
         return user
+
     return role_checker
 
 
 # Sample users for demo
 DEMO_USERS = [
-    {"username": "admin", "password": "admin123", "role": UserRole.ADMIN, "email": "admin@safehabitat.gov.in"},
-    {"username": "district_officer", "password": "district123", "role": UserRole.DISTRICT_OFFICER, "email": "district@safehabitat.gov.in"},
-    {"username": "analyst", "password": "analyst123", "role": UserRole.VILLAGE_ANALYST, "email": "analyst@safehabitat.gov.in"},
+    {
+        "username": "admin",
+        "password": "admin123",
+        "role": UserRole.ADMIN,
+        "email": "admin@safehabitat.gov.in",
+    },
+    {
+        "username": "district_officer",
+        "password": "district123",
+        "role": UserRole.DISTRICT_OFFICER,
+        "email": "district@safehabitat.gov.in",
+    },
+    {
+        "username": "analyst",
+        "password": "analyst123",
+        "role": UserRole.VILLAGE_ANALYST,
+        "email": "analyst@safehabitat.gov.in",
+    },
 ]
 
 
@@ -75,10 +93,12 @@ def create_demo_users(db: Session):
     for u in DEMO_USERS:
         existing = db.query(User).filter(User.username == u["username"]).first()
         if not existing:
-            db.add(User(
-                username=u["username"],
-                email=u["email"],
-                hashed_password=hash_password(u["password"]),
-                role=u["role"].value,
-            ))
+            db.add(
+                User(
+                    username=u["username"],
+                    email=u["email"],
+                    hashed_password=hash_password(u["password"]),
+                    role=u["role"].value,
+                )
+            )
     db.commit()

@@ -23,36 +23,42 @@ class RelocationEngine:
         for site in sites:
             scores = site.get("scores", {})
             safety = scores.get("safety", 0.5)
-            capacity = min(site.get("max_capacity", 1000) / max(habitation.get("population", 1), 1), 1.0)
-            accessibility = (scores.get("road", 0.5) + scores.get("healthcare", 0.5) + scores.get("school", 0.5)) / 3
+            capacity = min(
+                site.get("max_capacity", 1000) / max(habitation.get("population", 1), 1), 1.0
+            )
+            accessibility = (
+                scores.get("road", 0.5) + scores.get("healthcare", 0.5) + scores.get("school", 0.5)
+            ) / 3
             services = (scores.get("healthcare", 0.5) + scores.get("school", 0.5)) / 2
             environment = scores.get("environment", 0.5)
             livelihood = scores.get("livelihood", 0.5)
 
             suitability = (
-                weights["safety"] * safety +
-                weights["capacity"] * capacity +
-                weights["accessibility"] * accessibility +
-                weights["services"] * services +
-                weights["environment"] * environment +
-                weights["livelihood"] * livelihood
+                weights["safety"] * safety
+                + weights["capacity"] * capacity
+                + weights["accessibility"] * accessibility
+                + weights["services"] * services
+                + weights["environment"] * environment
+                + weights["livelihood"] * livelihood
             )
 
             capacity_check = self.check_carrying_capacity(habitation, site)
 
-            ranked.append({
-                **site,
-                "suitability_score": round(suitability, 3),
-                "score_breakdown": {
-                    "safety": round(safety, 3),
-                    "capacity": round(capacity, 3),
-                    "accessibility": round(accessibility, 3),
-                    "services": round(services, 3),
-                    "environment": round(environment, 3),
-                    "livelihood": round(livelihood, 3),
-                },
-                "carrying_capacity": capacity_check,
-            })
+            ranked.append(
+                {
+                    **site,
+                    "suitability_score": round(suitability, 3),
+                    "score_breakdown": {
+                        "safety": round(safety, 3),
+                        "capacity": round(capacity, 3),
+                        "accessibility": round(accessibility, 3),
+                        "services": round(services, 3),
+                        "environment": round(environment, 3),
+                        "livelihood": round(livelihood, 3),
+                    },
+                    "carrying_capacity": capacity_check,
+                }
+            )
 
         return sorted(ranked, key=lambda x: x["suitability_score"], reverse=True)
 

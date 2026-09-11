@@ -13,15 +13,17 @@ Models trained:
 4. Risk fusion (XGBoost) — predicts overall risk
 5. Priority band classifier (Random Forest) — classifies relocation urgency
 """
+
 import json
 import pickle
-import numpy as np
 from pathlib import Path
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from sklearn.metrics import classification_report, mean_squared_error, r2_score
-from sklearn.preprocessing import LabelEncoder
+
+import numpy as np
 import xgboost as xgb
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 DATA_DIR = Path(__file__).parent.parent.parent / "data" / "assam"
 MODEL_DIR = Path(__file__).parent.parent / "models"
@@ -134,28 +136,50 @@ def prepare_features(data):
 
 FEATURE_NAMES = [
     # Core hazard
-    "flood_score", "landslide_score", "seismic_score", "erosion_score",
+    "flood_score",
+    "landslide_score",
+    "seismic_score",
+    "erosion_score",
     "hazard_combined",
     # Vulnerability
-    "pop_density", "poverty_index", "age_vulnerability",
-    "disability_index", "infra_quality", "vuln_combined",
+    "pop_density",
+    "poverty_index",
+    "age_vulnerability",
+    "disability_index",
+    "infra_quality",
+    "vuln_combined",
     # Exposure
-    "exposure", "population", "area_sq_km", "pop_per_sq_km",
+    "exposure",
+    "population",
+    "area_sq_km",
+    "pop_per_sq_km",
     # NRSC enrichment
-    "nrsc_flood_risk", "hazard_index", "flood_waves", "flood_village_ratio",
+    "nrsc_flood_risk",
+    "hazard_index",
+    "flood_waves",
+    "flood_village_ratio",
     # IFI-Impacts real data
-    "dfsi", "historical_floods", "avg_flood_duration", "flood_fatalities",
-    "flooded_area_pct", "permanent_water",
+    "dfsi",
+    "historical_floods",
+    "avg_flood_duration",
+    "flood_fatalities",
+    "flooded_area_pct",
+    "permanent_water",
     # Interaction
-    "hazard_x_exposure", "flood_x_vuln", "dfsi_x_flood",
+    "hazard_x_exposure",
+    "flood_x_vuln",
+    "dfsi_x_flood",
 ]
 
 
 def train_flood_model(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = xgb.XGBRegressor(
-        n_estimators=150, max_depth=6, learning_rate=0.08,
-        objective="reg:squarederror", random_state=42,
+        n_estimators=150,
+        max_depth=6,
+        learning_rate=0.08,
+        objective="reg:squarederror",
+        random_state=42,
     )
     model.fit(X_train, y_train, eval_set=[(X_test, y_test)], verbose=False)
     preds = model.predict(X_test)
@@ -179,8 +203,11 @@ def train_landslide_model(X, y):
 def train_vulnerability_model(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = xgb.XGBRegressor(
-        n_estimators=120, max_depth=5, learning_rate=0.08,
-        objective="reg:squarederror", random_state=42,
+        n_estimators=120,
+        max_depth=5,
+        learning_rate=0.08,
+        objective="reg:squarederror",
+        random_state=42,
     )
     model.fit(X_train, y_train, eval_set=[(X_test, y_test)], verbose=False)
     preds = model.predict(X_test)
@@ -193,8 +220,11 @@ def train_vulnerability_model(X, y):
 def train_risk_model(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     model = xgb.XGBRegressor(
-        n_estimators=150, max_depth=6, learning_rate=0.06,
-        objective="reg:squarederror", random_state=42,
+        n_estimators=150,
+        max_depth=6,
+        learning_rate=0.06,
+        objective="reg:squarederror",
+        random_state=42,
     )
     model.fit(X_train, y_train, eval_set=[(X_test, y_test)], verbose=False)
     preds = model.predict(X_test)
@@ -256,7 +286,8 @@ def main():
     # Feature importance for risk model
     importances = sorted(
         zip(FEATURE_NAMES, risk_model.feature_importances_),
-        key=lambda x: x[1], reverse=True,
+        key=lambda x: x[1],
+        reverse=True,
     )
     print("\n  Top features (risk model):")
     for name, imp in importances[:10]:

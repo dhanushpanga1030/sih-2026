@@ -2,9 +2,11 @@
 
 Uses trained XGBoost model for fusion when available.
 """
+
 import pickle
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 MODEL_DIR = Path(__file__).parent.parent / "models"
 
@@ -20,8 +22,9 @@ class RiskEngine:
             with open(fp, "rb") as f:
                 self.models = pickle.load(f)
 
-    def compute_risk(self, hazard: float, exposure: float, vulnerability: float,
-                     features: dict = None) -> dict:
+    def compute_risk(
+        self, hazard: float, exposure: float, vulnerability: float, features: dict = None
+    ) -> dict:
         """Compute overall risk score and priority band."""
         if self.models and "risk_model" in self.models and features:
             try:
@@ -45,7 +48,9 @@ class RiskEngine:
             "exposure_score": round(exposure, 3),
             "vulnerability_score": round(vulnerability, 3),
             "confidence": confidence,
-            "contributing_factors": self._contributing_factors(hazard, exposure, vulnerability, features),
+            "contributing_factors": self._contributing_factors(
+                hazard, exposure, vulnerability, features
+            ),
         }
 
     def _weighted_risk(self, hazard: float, exposure: float, vulnerability: float) -> float:
@@ -63,8 +68,9 @@ class RiskEngine:
         else:
             return "monitor"
 
-    def _contributing_factors(self, hazard: float, exposure: float,
-                               vulnerability: float, features: dict = None) -> dict:
+    def _contributing_factors(
+        self, hazard: float, exposure: float, vulnerability: float, features: dict = None
+    ) -> dict:
         """Decompose risk into contributing factor weights."""
         base = {
             "hazard_contribution": round(0.4 * hazard, 4),
@@ -81,8 +87,14 @@ class RiskEngine:
 
     def _estimate_confidence(self, features: dict) -> float:
         """Estimate confidence from feature completeness."""
-        key_features = ["flood_history", "landslide_history", "poverty_index",
-                        "infra_quality", "population", "rainfall_mm"]
+        key_features = [
+            "flood_history",
+            "landslide_history",
+            "poverty_index",
+            "infra_quality",
+            "population",
+            "rainfall_mm",
+        ]
         present = sum(1 for k in key_features if features.get(k) is not None)
         return round(0.70 + (present / len(key_features)) * 0.25, 2)
 

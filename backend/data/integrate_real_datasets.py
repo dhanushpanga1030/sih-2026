@@ -7,10 +7,11 @@ Sources:
 
 Merges into assam_data.json for model training.
 """
+
 import csv
 import json
-from pathlib import Path
 from collections import Counter, defaultdict
+from pathlib import Path
 
 DATA_DIR = Path(__file__).parent
 REAL_DIR = DATA_DIR / "real_datasets"
@@ -41,16 +42,18 @@ def load_flood_events():
             if state == "ASSAM":
                 dist = row.get("Districts", "").strip()
                 if dist:
-                    district_events[dist].append({
-                        "date": row.get("Start Date", ""),
-                        "cause": row.get("Main Cause", ""),
-                        "duration_days": row.get("Duration(Days)", ""),
-                        "location": row.get("Location", ""),
-                        "fatality": row.get("Human fatality", ""),
-                        "injured": row.get("Human injured", ""),
-                        "displaced": row.get("Human Displaced", ""),
-                        "area_affected": row.get("Area Affected", ""),
-                    })
+                    district_events[dist].append(
+                        {
+                            "date": row.get("Start Date", ""),
+                            "cause": row.get("Main Cause", ""),
+                            "duration_days": row.get("Duration(Days)", ""),
+                            "location": row.get("Location", ""),
+                            "fatality": row.get("Human fatality", ""),
+                            "injured": row.get("Human injured", ""),
+                            "displaced": row.get("Human Displaced", ""),
+                            "area_affected": row.get("Area Affected", ""),
+                        }
+                    )
     return dict(district_events)
 
 
@@ -102,7 +105,9 @@ def integrate():
     flooded_area = load_flooded_area()
 
     print(f"  DFSI: {len(dfsi_data)} Assam districts")
-    print(f"  IFI events: {sum(len(v) for v in flood_events.values())} events across {len(flood_events)} districts")
+    print(
+        f"  IFI events: {sum(len(v) for v in flood_events.values())} events across {len(flood_events)} districts"
+    )
     print(f"  Flooded area: {len(flooded_area)} districts")
 
     # Load existing assam data

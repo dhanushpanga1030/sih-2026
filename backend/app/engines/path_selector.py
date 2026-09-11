@@ -2,7 +2,7 @@
 
 Calculates optimal relocation routes using road network data.
 """
-from typing import Optional
+
 import httpx
 
 
@@ -42,12 +42,14 @@ class PathSelector:
         steps = []
         for leg in route.get("legs", []):
             for step in leg.get("steps", []):
-                steps.append({
-                    "instruction": step.get("maneuver", {}).get("type", ""),
-                    "name": step.get("name", ""),
-                    "distance_km": round(step["distance"] / 1000, 2),
-                    "duration_min": round(step["duration"] / 60, 1),
-                })
+                steps.append(
+                    {
+                        "instruction": step.get("maneuver", {}).get("type", ""),
+                        "name": step.get("name", ""),
+                        "distance_km": round(step["distance"] / 1000, 2),
+                        "duration_min": round(step["duration"] / 60, 1),
+                    }
+                )
         return steps
 
     def find_multiple_routes(self, origin: dict, destination: dict) -> list:

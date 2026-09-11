@@ -4,10 +4,11 @@ Handles loading and normalizing geospatial data from multiple formats:
 - GeoJSON, Shapefile, CSV with lat/long, GeoTIFF metadata
 - Integrates with the ML engines for scoring
 """
-import json
+
 import csv
-from pathlib import Path
+import json
 from datetime import datetime
+from pathlib import Path
 
 DATA_DIR = Path(__file__).parent.parent.parent / "data"
 
@@ -17,9 +18,26 @@ class DataIngestionPipeline:
 
     SCHEMA = {
         "habitations": ["name", "district", "lat", "lon", "population", "area_sq_km"],
-        "hazard_layers": ["elevation", "slope", "rainfall_mm", "river_dist_km", "flood_history", "landslide_history"],
-        "vulnerability_layers": ["poverty_index", "age_vulnerability", "disability_index", "infra_quality"],
-        "infrastructure": ["road_dist_km", "healthcare_dist_km", "school_dist_km", "water_availability"],
+        "hazard_layers": [
+            "elevation",
+            "slope",
+            "rainfall_mm",
+            "river_dist_km",
+            "flood_history",
+            "landslide_history",
+        ],
+        "vulnerability_layers": [
+            "poverty_index",
+            "age_vulnerability",
+            "disability_index",
+            "infra_quality",
+        ],
+        "infrastructure": [
+            "road_dist_km",
+            "healthcare_dist_km",
+            "school_dist_km",
+            "water_availability",
+        ],
     }
 
     def __init__(self):
@@ -46,13 +64,15 @@ class DataIngestionPipeline:
 
             features.append(props)
 
-        self.sources_log.append({
-            "file": filepath,
-            "type": layer_type,
-            "format": "geojson",
-            "records": len(features),
-            "timestamp": datetime.now().isoformat(),
-        })
+        self.sources_log.append(
+            {
+                "file": filepath,
+                "type": layer_type,
+                "format": "geojson",
+                "records": len(features),
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
 
         return features
 
@@ -69,13 +89,15 @@ class DataIngestionPipeline:
                 except (ValueError, TypeError):
                     continue
 
-        self.sources_log.append({
-            "file": filepath,
-            "type": "csv",
-            "format": "csv",
-            "records": len(features),
-            "timestamp": datetime.now().isoformat(),
-        })
+        self.sources_log.append(
+            {
+                "file": filepath,
+                "type": "csv",
+                "format": "csv",
+                "records": len(features),
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
 
         return features
 
@@ -124,12 +146,20 @@ class DataIngestionPipeline:
     def _default_value(self, field: str):
         """Return sensible default for a field."""
         defaults = {
-            "elevation": 100, "slope": 10, "rainfall_mm": 1500,
-            "river_dist_km": 5, "flood_history": 0.3, "landslide_history": 0.2,
-            "poverty_index": 0.3, "age_vulnerability": 0.25,
-            "disability_index": 0.1, "infra_quality": 0.5,
-            "road_dist_km": 5, "healthcare_dist_km": 10,
-            "school_dist_km": 5, "water_availability": 0.6,
+            "elevation": 100,
+            "slope": 10,
+            "rainfall_mm": 1500,
+            "river_dist_km": 5,
+            "flood_history": 0.3,
+            "landslide_history": 0.2,
+            "poverty_index": 0.3,
+            "age_vulnerability": 0.25,
+            "disability_index": 0.1,
+            "infra_quality": 0.5,
+            "road_dist_km": 5,
+            "healthcare_dist_km": 10,
+            "school_dist_km": 5,
+            "water_availability": 0.6,
         }
         return defaults.get(field, 0)
 

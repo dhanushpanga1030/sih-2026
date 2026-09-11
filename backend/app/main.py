@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import api
+
+from app.config import get_settings
 from app.monitoring.metrics import router as metrics_router
+from app.routers import api
+from app.routers.auth_router import router as auth_router
 
 app = FastAPI(
     title="SafeHabitat AI",
@@ -51,18 +54,25 @@ app = FastAPI(
             "name": "Monitoring",
             "description": "System health and metrics",
         },
+        {
+            "name": "Auth",
+            "description": "Authentication and JWT token management",
+        },
     ],
 )
 
+settings = get_settings()
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 app.include_router(api.router, prefix="/api")
+app.include_router(auth_router, prefix="/api")
 app.include_router(metrics_router, prefix="/metrics")
 
 

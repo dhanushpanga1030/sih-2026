@@ -3,9 +3,11 @@
 Generates SHAP values for each model prediction to explain
 which features contributed most to a risk classification.
 """
+
 import pickle
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 MODEL_DIR = Path(__file__).parent.parent / "models"
 
@@ -29,6 +31,7 @@ class SHAPExplainer:
 
         try:
             import shap
+
             model = self.models["flood_model"]
             feature_vec = np.array([[features.get(k, 0) for k in self.models["feature_names"]]])
             explainer = shap.TreeExplainer(model)
@@ -43,7 +46,9 @@ class SHAPExplainer:
                 "contributions": dict(sorted_contribs),
                 "top_positive": [k for k, v in sorted_contribs if v > 0][:3],
                 "top_negative": [k for k, v in sorted_contribs if v < 0][:3],
-                "base_value": round(float(explainer.expected_value), 4) if hasattr(explainer, 'expected_value') else 0,
+                "base_value": round(float(explainer.expected_value), 4)
+                if hasattr(explainer, "expected_value")
+                else 0,
             }
         except ImportError:
             return self._fallback_explanation(features)
@@ -55,6 +60,7 @@ class SHAPExplainer:
 
         try:
             import shap
+
             model = self.models["risk_model"]
             feature_vec = np.array([[features.get(k, 0) for k in self.models["feature_names"]]])
             explainer = shap.TreeExplainer(model)
@@ -68,7 +74,9 @@ class SHAPExplainer:
             return {
                 "contributions": dict(sorted_contribs),
                 "top_factors": [k for k, v in sorted_contribs[:5]],
-                "base_value": round(float(explainer.expected_value), 4) if hasattr(explainer, 'expected_value') else 0,
+                "base_value": round(float(explainer.expected_value), 4)
+                if hasattr(explainer, "expected_value")
+                else 0,
             }
         except ImportError:
             return self._fallback_risk_explanation(features)

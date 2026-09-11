@@ -2,14 +2,21 @@
 
 Loads assam_data.json into spatial tables.
 """
+
 import json
 from pathlib import Path
+
 from sqlalchemy.orm import Session
-from app.models.spatial_models import (
-    District, Habitation, HazardScore, VulnerabilityScore,
-    RiskScore, RelocationSite, Explanation
-)
+
 from app.database import Base, engine
+from app.models.spatial_models import (
+    District,
+    Habitation,
+    HazardScore,
+    RelocationSite,
+    RiskScore,
+    VulnerabilityScore,
+)
 
 DATA_DIR = Path(__file__).parent.parent.parent / "data" / "assam"
 BAND_LABELS = {
@@ -37,7 +44,9 @@ def migrate_json_to_db():
                 area_sq_km=dist.get("area_sq_km"),
                 population=dist.get("population"),
                 division=dist.get("division"),
-                geom=f"SRID=4326;POINT({dist['lon']} {dist['lat']})" if dist.get("lat") and dist.get("lon") else None,
+                geom=f"SRID=4326;POINT({dist['lon']} {dist['lat']})"
+                if dist.get("lat") and dist.get("lon")
+                else None,
             )
             session.add(district)
             session.flush()
@@ -68,48 +77,54 @@ def migrate_json_to_db():
             # Hazard scores (nested under "hazard" key)
             hazard = hab.get("hazard", {})
             nrsc = district.get("nrsc_flood_data", {})
-            session.add(HazardScore(
-                habitation_id=habitation.id,
-                flood_score=hazard.get("flood"),
-                landslide_score=hazard.get("landslide"),
-                seismic_score=hazard.get("seismic"),
-                erosion_score=hazard.get("erosion"),
-                combined_hazard=hazard.get("combined", 0.5),
-                nrcs_very_high_villages=nrsc.get("very_high_villages", 0),
-                nrcs_high_villages=nrsc.get("high_villages", 0),
-                nrcs_moderate_villages=nrsc.get("moderate_villages", 0),
-                nrcs_low_villages=nrsc.get("low_villages", 0),
-                nrcs_very_low_villages=nrsc.get("very_low_villages", 0),
-                nrcs_ranking=nrsc.get("ranking", ""),
-                nrcs_hazard_index=nrsc.get("hazard_index", 0),
-                nrcs_flood_waves=nrsc.get("flood_waves", 0),
-                nrcs_gauge_station=nrsc.get("gauge_station", ""),
-                data_source="NRSC/ISRO",
-            ))
+            session.add(
+                HazardScore(
+                    habitation_id=habitation.id,
+                    flood_score=hazard.get("flood"),
+                    landslide_score=hazard.get("landslide"),
+                    seismic_score=hazard.get("seismic"),
+                    erosion_score=hazard.get("erosion"),
+                    combined_hazard=hazard.get("combined", 0.5),
+                    nrcs_very_high_villages=nrsc.get("very_high_villages", 0),
+                    nrcs_high_villages=nrsc.get("high_villages", 0),
+                    nrcs_moderate_villages=nrsc.get("moderate_villages", 0),
+                    nrcs_low_villages=nrsc.get("low_villages", 0),
+                    nrcs_very_low_villages=nrsc.get("very_low_villages", 0),
+                    nrcs_ranking=nrsc.get("ranking", ""),
+                    nrcs_hazard_index=nrsc.get("hazard_index", 0),
+                    nrcs_flood_waves=nrsc.get("flood_waves", 0),
+                    nrcs_gauge_station=nrsc.get("gauge_station", ""),
+                    data_source="NRSC/ISRO",
+                )
+            )
 
             # Vulnerability scores (nested under "vulnerability" key)
             vuln = hab.get("vulnerability", {})
-            session.add(VulnerabilityScore(
-                habitation_id=habitation.id,
-                population_density=vuln.get("population_density", 500),
-                poverty_index=vuln.get("poverty_index", 0.3),
-                age_vulnerability=vuln.get("age_vulnerability", 0.15),
-                disability_index=vuln.get("disability_index", 0.02),
-                infrastructure_quality=vuln.get("infrastructure_quality", 0.5),
-                combined_vulnerability=vuln.get("combined", 0.35),
-                weights=vuln.get("weights", {}),
-            ))
+            session.add(
+                VulnerabilityScore(
+                    habitation_id=habitation.id,
+                    population_density=vuln.get("population_density", 500),
+                    poverty_index=vuln.get("poverty_index", 0.3),
+                    age_vulnerability=vuln.get("age_vulnerability", 0.15),
+                    disability_index=vuln.get("disability_index", 0.02),
+                    infrastructure_quality=vuln.get("infrastructure_quality", 0.5),
+                    combined_vulnerability=vuln.get("combined", 0.35),
+                    weights=vuln.get("weights", {}),
+                )
+            )
 
             # Risk scores (nested under "risk" key)
             risk = hab.get("risk", {})
-            session.add(RiskScore(
-                habitation_id=habitation.id,
-                overall_risk=risk.get("overall", 0.5),
-                priority_band=risk.get("band", "monitor"),
-                contributing_factors=risk.get("contributing_factors", {}),
-                shap_values=risk.get("shap_values", {}),
-                data_source="NRSC/ISRO + ML Models",
-            ))
+            session.add(
+                RiskScore(
+                    habitation_id=habitation.id,
+                    overall_risk=risk.get("overall", 0.5),
+                    priority_band=risk.get("band", "monitor"),
+                    contributing_factors=risk.get("contributing_factors", {}),
+                    shap_values=risk.get("shap_values", {}),
+                    data_source="NRSC/ISRO + ML Models",
+                )
+            )
 
         # Relocation sites are top-level
         hab_id_map = {}
@@ -123,26 +138,30 @@ def migrate_json_to_db():
 
             scores = site.get("scores", {})
             cc = site.get("carrying_capacity", {})
-            session.add(RelocationSite(
-                habitation_id=hab_id,
-                name=site["name"],
-                area_sq_km=site.get("area_sq_km", 10),
-                existing_population=site.get("existing_population", 5000),
-                max_capacity=site.get("max_capacity", 50000),
-                water_availability=cc.get("water_availability", 0.7),
-                healthcare_access=scores.get("healthcare", 0.6),
-                school_access=scores.get("school", 0.5),
-                road_access=scores.get("road", 0.6),
-                environmental_suitability=scores.get("environment", 0.7),
-                suitability_score=site.get("suitability_score", 0.6),
-                carrying_capacity_verdict=cc.get("verdict", "feasible"),
-                capacity_details=cc,
-            ))
+            session.add(
+                RelocationSite(
+                    habitation_id=hab_id,
+                    name=site["name"],
+                    area_sq_km=site.get("area_sq_km", 10),
+                    existing_population=site.get("existing_population", 5000),
+                    max_capacity=site.get("max_capacity", 50000),
+                    water_availability=cc.get("water_availability", 0.7),
+                    healthcare_access=scores.get("healthcare", 0.6),
+                    school_access=scores.get("school", 0.5),
+                    road_access=scores.get("road", 0.6),
+                    environmental_suitability=scores.get("environment", 0.7),
+                    suitability_score=site.get("suitability_score", 0.6),
+                    carrying_capacity_verdict=cc.get("verdict", "feasible"),
+                    capacity_details=cc,
+                )
+            )
 
         session.commit()
-        print(f"Migration complete: {len(district_map)} districts, "
-              f"{len(data['habitations'])} habitations, "
-              f"{len(data['relocation_sites'])} relocation sites")
+        print(
+            f"Migration complete: {len(district_map)} districts, "
+            f"{len(data['habitations'])} habitations, "
+            f"{len(data['relocation_sites'])} relocation sites"
+        )
 
 
 if __name__ == "__main__":

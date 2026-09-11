@@ -2,11 +2,11 @@
 
 Tracks model performance degradation and data distribution shifts.
 """
+
 import json
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Optional
 from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
 
 DATA_DIR = Path(__file__).parent.parent.parent / "data"
 DRIFT_LOG = DATA_DIR / "drift_monitoring.json"
@@ -34,13 +34,16 @@ class DriftMonitor:
             with open(baseline_path) as f:
                 self.baselines = json.load(f)
 
-    def check_distribution(self, feature_name: str, current_values: list[float]) -> Optional[DriftAlert]:
+    def check_distribution(
+        self, feature_name: str, current_values: list[float]
+    ) -> DriftAlert | None:
         """Check if current data distribution has shifted from baseline."""
         baseline = self.baselines.get(feature_name)
         if not baseline:
             return None
 
         import statistics
+
         current_mean = statistics.mean(current_values)
         current_std = statistics.stdev(current_values) if len(current_values) > 1 else 0
 
@@ -68,7 +71,9 @@ class DriftMonitor:
             return alert
         return None
 
-    def check_data_freshness(self, source: str, last_updated: str, max_age_days: int = 30) -> Optional[DriftAlert]:
+    def check_data_freshness(
+        self, source: str, last_updated: str, max_age_days: int = 30
+    ) -> DriftAlert | None:
         """Check if data source has become stale."""
         last_dt = datetime.fromisoformat(last_updated.replace("Z", "+00:00"))
         age = datetime.now() - last_dt.replace(tzinfo=None)
@@ -87,11 +92,15 @@ class DriftMonitor:
             return alert
         return None
 
-    def check_model_performance(self, model_name: str, accuracy: float, baseline_accuracy: float) -> Optional[DriftAlert]:
+    def check_model_performance(
+        self, model_name: str, accuracy: float, baseline_accuracy: float
+    ) -> DriftAlert | None:
         """Check if model accuracy has degraded."""
         degradation = baseline_accuracy - accuracy
         if degradation > 0.05:
-            severity = "critical" if degradation > 0.15 else "high" if degradation > 0.10 else "medium"
+            severity = (
+                "critical" if degradation > 0.15 else "high" if degradation > 0.10 else "medium"
+            )
             alert = DriftAlert(
                 timestamp=datetime.now().isoformat(),
                 alert_type="model_degradation",
@@ -104,7 +113,7 @@ class DriftMonitor:
             return alert
         return None
 
-    def get_alerts(self, severity: Optional[str] = None) -> list[dict]:
+    def get_alerts(self, severity: str | None = None) -> list[dict]:
         alerts = self.alerts
         if severity:
             alerts = [a for a in alerts if a.severity == severity]

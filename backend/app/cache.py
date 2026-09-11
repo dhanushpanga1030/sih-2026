@@ -2,20 +2,21 @@
 
 Caches frequent API responses to reduce latency.
 """
-import json
+
 import hashlib
-from functools import wraps
-from typing import Optional
+import json
 import os
+from functools import wraps
+
 import redis
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 CACHE_TTL = 300  # 5 minutes
 
-_client: Optional[redis.Redis] = None
+_client: redis.Redis | None = None
 
 
-def get_redis() -> Optional[redis.Redis]:
+def get_redis() -> redis.Redis | None:
     global _client
     if _client is None:
         try:
@@ -28,6 +29,7 @@ def get_redis() -> Optional[redis.Redis]:
 
 def cache_response(ttl: int = CACHE_TTL, prefix: str = "api"):
     """Decorator to cache API responses in Redis."""
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -55,7 +57,9 @@ def cache_response(ttl: int = CACHE_TTL, prefix: str = "api"):
                 pass
 
             return result
+
         return wrapper
+
     return decorator
 
 
@@ -83,8 +87,9 @@ def cache_stats() -> dict:
             "hits": info.get("keyspace_hits", 0),
             "misses": info.get("keyspace_misses", 0),
             "hit_rate": round(
-                info.get("keyspace_hits", 0) /
-                max(1, info.get("keyspace_hits", 0) + info.get("keyspace_misses", 0)) * 100,
+                info.get("keyspace_hits", 0)
+                / max(1, info.get("keyspace_hits", 0) + info.get("keyspace_misses", 0))
+                * 100,
                 2,
             ),
         }

@@ -2,13 +2,15 @@
 
 Supports SQLite (dev) and PostgreSQL/PostGIS (production).
 """
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+
 import os
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "sqlite:///./safehabitat.db"  # Default to SQLite for dev
+    "sqlite:///./safehabitat.db",  # Default to SQLite for dev
 )
 
 # For production with PostGIS:
