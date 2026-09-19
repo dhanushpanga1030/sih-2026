@@ -3,26 +3,22 @@
 Production database schema with spatial indexing, audit trails,
 and data source tracking.
 """
-
-import enum
-
-from geoalchemy2 import Geometry
+import os
 from sqlalchemy import (
-    JSON,
-    Boolean,
-    Column,
-    DateTime,
-    Float,
-    ForeignKey,
-    Index,
-    Integer,
-    String,
-    Text,
+    Column, Integer, String, Float, JSON, DateTime, Boolean,
+    ForeignKey, Text, Enum as SQLEnum, Index, UniqueConstraint
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-
 from app.database import Base
+import enum
+
+IS_SQLITE = "sqlite" in os.getenv("DATABASE_URL", "sqlite:///./safehabitat.db")
+
+if not IS_SQLITE:
+    from geoalchemy2 import Geometry
+else:
+    Geometry = None  # type: ignore
 
 
 class PriorityBand(str, enum.Enum):
@@ -76,8 +72,8 @@ class SpatialLayer(Base):
     resolution_meters = Column(Float)
     temporal_start = Column(DateTime)
     temporal_end = Column(DateTime)
-    geom = Column(Geometry("MULTIPOLYGON", srid=4326))
-    metadata = Column(JSON)
+    geom = Column(Geometry("MULTIPOLYGON", srid=4326)) if Geometry else Column(Text, nullable=True)
+    metadata_ = Column("metadata", JSON)
     last_updated = Column(DateTime, server_default=func.now())
 
 
@@ -91,7 +87,7 @@ class District(Base):
     area_sq_km = Column(Float)
     population = Column(Integer)
     division = Column(String(100))
-    geom = Column(Geometry("MULTIPOLYGON", srid=4326))
+    geom = Column(Geometry("MULTIPOLYGON", srid=4326)) if Geometry else Column(Text, nullable=True)
 
     habitations = relationship("Habitation", back_populates="district")
 
@@ -106,21 +102,18 @@ class Habitation(Base, AuditMixin):
     area_sq_km = Column(Float)
     elevation_m = Column(Float)
     slope_degrees = Column(Float)
-    geom = Column(Geometry("POINT", srid=4326))
+    geom = Column(Geometry("POINT", srid=4326)) if Geometry else Column(Text, nullable=True)
 
     district = relationship("District", back_populates="habitations")
     hazard_scores = relationship("HazardScore", back_populates="habitation", uselist=False)
-    vulnerability_scores = relationship(
-        "VulnerabilityScore", back_populates="habitation", uselist=False
-    )
+    vulnerability_scores = relationship("VulnerabilityScore", back_populates="habitation", uselist=False)
     risk_score = relationship("RiskScore", back_populates="habitation", uselist=False)
     relocation_sites = relationship("RelocationSite", back_populates="habitation")
     explanations = relationship("Explanation", back_populates="habitation")
 
     __table_args__ = (
-        Index("idx_habitation_geom", "geom", postgresql_using="gist"),
         Index("idx_habitation_district", "district_id"),
-    )
+    ) if not IS_SQLITE else ()
 
 
 class HazardScore(Base, AuditMixin):
@@ -149,7 +142,9 @@ class HazardScore(Base, AuditMixin):
 
     habitation = relationship("Habitation", back_populates="hazard_scores")
 
-    __table_args__ = (Index("idx_hazard_habitation", "habitation_id"),)
+    __table_args__ = (
+        Index("idx_hazard_habitation", "habitation_id"),
+    )
 
 
 class VulnerabilityScore(Base, AuditMixin):
@@ -202,11 +197,11 @@ class RelocationSite(Base, AuditMixin):
     suitability_score = Column(Float)
     carrying_capacity_verdict = Column(String(50))
     capacity_details = Column(JSON)
-    geom = Column(Geometry("POINT", srid=4326))
+    geom = Column(Geometry("POINT", srid=4326)) if Geometry else Column(Text, nullable=True)
 
     habitation = relationship("Habitation", back_populates="relocation_sites")
 
-    __table_args__ = (Index("idx_relocation_geom", "geom", postgresql_using="gist"),)
+    __table_args__ = ()
 
 
 class Explanation(Base, AuditMixin):

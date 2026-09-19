@@ -63,22 +63,39 @@ class RelocationEngine:
         return sorted(ranked, key=lambda x: x["suitability_score"], reverse=True)
 
     def check_carrying_capacity(self, habitation: dict, site: dict) -> dict:
-        """Check if site can sustainably support incoming population."""
+        """Real carrying capacity: water, sanitation, area, infrastructure."""
         incoming = habitation.get("population", 0)
         max_cap = site.get("max_capacity", 0)
         existing = site.get("existing_population", 0)
         available = max_cap - existing
 
-        water = site.get("carrying_capacity", {}).get("water_availability", 0.5)
+        cc = site.get("carrying_capacity", {})
+        water = cc.get("water_availability", 0.5)
+        sanitation = cc.get("sanitation_capacity", 0.5)
+        area_km2 = cc.get("area_km2", 1.0)
+        healthcare = cc.get("healthcare_beds", 0)
+
+        # Per-person requirements
+        water_per_person = water * 200  # liters/day capacity
+        sanitation_ratio = sanitation  # fraction that can be served
+        area_per_person = area_km2 * 1000 / max(incoming, 1)  # sq meters per person
+
+        # Realistic capacity based on resources
+        water_capacity = int(water_per_person * existing / 50) if existing > 0 else int(water_per_person * 1000 / 50)
+        sanitation_capacity = int(sanitation_ratio * existing) if existing > 0 else int(sanitation_ratio * 2000)
+        area_capacity = int(area_km2 * 250)  # ~250 people per sq km for relief camps
+        healthcare_capacity = healthcare * 50 if healthcare > 0 else 500
+
+        real_capacity = min(water_capacity, sanitation_capacity, area_capacity, healthcare_capacity)
+        real_available = max(0, real_capacity - existing)
+
         scores = site.get("scores", {})
-        health = scores.get("healthcare", 0.5)
-        school = scores.get("school", 0.5)
-        road = scores.get("road", 0.5)
+        infra_rating = round((scores.get("healthcare", 0.5) + scores.get("school", 0.5) + scores.get("road", 0.5)) / 3, 3)
 
-        infra_rating = round((health + school + road) / 3, 3)
-
-        if available >= incoming and infra_rating >= 0.4 and water >= 0.3:
+        if real_available >= incoming and infra_rating >= 0.4 and water >= 0.3:
             verdict = "sufficient"
+        elif real_available >= incoming * 0.5:
+            verdict = "partial"
         else:
             verdict = "insufficient"
 
@@ -86,11 +103,58 @@ class RelocationEngine:
             "verdict": verdict,
             "incoming_population": incoming,
             "site_capacity": max_cap,
+            "real_capacity": real_capacity,
             "existing_population": existing,
-            "available_capacity": available,
-            "capacity_gap": available - incoming,
+            "available_capacity": real_available,
+            "capacity_gap": real_available - incoming,
             "infrastructure_rating": infra_rating,
             "water_availability": water,
+            "sanitation_capacity": sanitation,
+            "area_km2": area_km2,
+            "area_per_person_sqm": round(area_per_person, 1),
+            "healthcare_beds": healthcare,
+            "capacity_breakdown": {
+                "water_limited": water_capacity,
+                "sanitation_limited": sanitation_capacity,
+                "area_limited": area_capacity,
+                "healthcare_limited": healthcare_capacity,
+            },
+        }
+
+
+    def compute_relocation_feasibility(self, hazard: float, vulnerability: float,
+                                        exposure: float, area_km2: float,
+                                        population: int) -> dict:
+        """Compute relocation feasibility score and recommendation."""
+        import math
+        risk = (hazard ** 0.4) * (exposure ** 0.3) * (vulnerability ** 0.3)
+        risk = min(max(risk, 0), 1)
+
+        pop_density = population / max(area_km2, 0.01)
+        threshold = 0.5
+
+        if risk >= 0.65:
+            recommendation = "immediate_relocation"
+            urgency = "critical"
+        elif risk >= 0.50:
+            recommendation = "planned_relocation"
+            urgency = "high"
+        elif risk >= 0.35:
+            recommendation = "monitor_and_prepare"
+            urgency = "medium"
+        else:
+            recommendation = "no_action"
+            urgency = "low"
+
+        return {
+            "feasibility_score": round(1 - risk, 3),
+            "risk_score": round(risk, 3),
+            "recommendation": recommendation,
+            "urgency": urgency,
+            "population": population,
+            "area_km2": area_km2,
+            "pop_density": round(pop_density, 1),
+            "needs_relocation": risk >= threshold,
         }
 
 

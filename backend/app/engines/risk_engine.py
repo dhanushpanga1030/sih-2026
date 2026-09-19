@@ -2,11 +2,9 @@
 
 Uses trained XGBoost model for fusion when available.
 """
-
 import pickle
-from pathlib import Path
-
 import numpy as np
+from pathlib import Path
 
 MODEL_DIR = Path(__file__).parent.parent / "models"
 
@@ -22,10 +20,15 @@ class RiskEngine:
             with open(fp, "rb") as f:
                 self.models = pickle.load(f)
 
-    def compute_risk(
-        self, hazard: float, exposure: float, vulnerability: float, features: dict = None
-    ) -> dict:
-        """Compute overall risk score and priority band."""
+    def compute_risk(self, hazard: float, exposure: float, vulnerability: float,
+                     features: dict = None, **sub_scores) -> dict:
+        """Compute overall risk score using multiplicative formula.
+
+        risk = (H^w1) * (E^w2) * (V^w3)
+        where w1=0.4, w2=0.3, w3=0.3 (configurable).
+
+        Sub-scores from sub_scores kwargs are used for contributing factor analysis.
+        """
         if self.models and "risk_model" in self.models and features:
             try:
                 feature_vec = np.array([[features.get(k, 0) for k in self.models["feature_names"]]])
@@ -33,29 +36,35 @@ class RiskEngine:
                 risk_score = round(min(max(risk_score, 0), 1), 3)
                 confidence = self._estimate_confidence(features)
             except Exception:
-                risk_score = self._weighted_risk(hazard, exposure, vulnerability)
+                risk_score = self._multiplicative_risk(hazard, exposure, vulnerability)
                 confidence = 0.65
         else:
-            risk_score = self._weighted_risk(hazard, exposure, vulnerability)
+            risk_score = self._multiplicative_risk(hazard, exposure, vulnerability)
             confidence = 0.65
 
         band = self._classify_band(risk_score)
 
         return {
+            "risk_score": risk_score,
+            "risk_band": band,
             "overall_risk": risk_score,
             "band": band,
             "hazard_score": round(hazard, 3),
             "exposure_score": round(exposure, 3),
             "vulnerability_score": round(vulnerability, 3),
             "confidence": confidence,
-            "contributing_factors": self._contributing_factors(
-                hazard, exposure, vulnerability, features
-            ),
+            "contributing_factors": self._contributing_factors(hazard, exposure, vulnerability, features),
+            "sub_scores": sub_scores,
         }
 
-    def _weighted_risk(self, hazard: float, exposure: float, vulnerability: float) -> float:
-        """Deterministic weighted risk fusion."""
-        return round(0.4 * hazard + 0.3 * exposure + 0.3 * vulnerability, 3)
+    def _multiplicative_risk(self, hazard: float, exposure: float, vulnerability: float) -> float:
+        """Multiplicative risk fusion: risk = H^0.4 * E^0.3 * V^0.3."""
+        import math
+        h = max(hazard, 0.001)
+        e = max(exposure, 0.001)
+        v = max(vulnerability, 0.001)
+        risk = (h ** 0.4) * (e ** 0.3) * (v ** 0.3)
+        return round(min(max(risk, 0), 1), 3)
 
     def _classify_band(self, risk: float) -> str:
         """Classify risk into priority band."""
@@ -68,9 +77,8 @@ class RiskEngine:
         else:
             return "monitor"
 
-    def _contributing_factors(
-        self, hazard: float, exposure: float, vulnerability: float, features: dict = None
-    ) -> dict:
+    def _contributing_factors(self, hazard: float, exposure: float,
+                               vulnerability: float, features: dict = None) -> dict:
         """Decompose risk into contributing factor weights."""
         base = {
             "hazard_contribution": round(0.4 * hazard, 4),
@@ -87,14 +95,8 @@ class RiskEngine:
 
     def _estimate_confidence(self, features: dict) -> float:
         """Estimate confidence from feature completeness."""
-        key_features = [
-            "flood_history",
-            "landslide_history",
-            "poverty_index",
-            "infra_quality",
-            "population",
-            "rainfall_mm",
-        ]
+        key_features = ["flood_history", "landslide_history", "poverty_index",
+                        "infra_quality", "population", "rainfall_mm"]
         present = sum(1 for k in key_features if features.get(k) is not None)
         return round(0.70 + (present / len(key_features)) * 0.25, 2)
 

@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "description": "Real rainfall and river water level data from Assam",
+    "sources": [
+      "IMD Telemetry Hourly Rainfall (2021-2025, 2026-2030)",
+      "IMD Manual Daily Rainfall (2021-2025)",
+      "River Water Level Telemetry (2021-2025)"
+    ],
+    "generated_at": "2026-09-16T12:12:30.473720"
+  },
+  "telemetry_hourly_rainfall": {},
+  "manual_daily_rainfall": {},
+  "river_water_level": {}
+}
