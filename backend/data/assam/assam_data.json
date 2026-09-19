@@ -3624,7 +3624,7 @@
   ],
   "habitations": [
     {
-      "name": "Maibong A",
+      "name": "Silagrant",
       "district": "Kamrup Metropolitan",
       "lat": 26.1925,
       "lon": 91.74,
@@ -3750,10 +3750,11 @@
           "pct_forest": 4.8,
           "pct_agriculture": 33.1
         }
-      }
+      },
+      "census_village_pop": 6504
     },
     {
-      "name": "Maibong B",
+      "name": "Amerigog N.C.",
       "district": "Kamrup Metropolitan",
       "lat": 26.0925,
       "lon": 91.8222,
@@ -3879,10 +3880,11 @@
           "pct_forest": 4.8,
           "pct_agriculture": 33.1
         }
-      }
+      },
+      "census_village_pop": 5348
     },
     {
-      "name": "Goalpara Town C",
+      "name": "Jogipara",
       "district": "Kamrup Metropolitan",
       "lat": 26.0882,
       "lon": 91.6503,
@@ -4008,10 +4010,11 @@
           "pct_forest": 4.8,
           "pct_agriculture": 33.1
         }
-      }
+      },
+      "census_village_pop": 4482
     },
     {
-      "name": "Dhakuakhana A",
+      "name": "Tupamari",
       "district": "Kamrup Rural",
       "lat": 26.3495,
       "lon": 90.8,
@@ -4137,10 +4140,11 @@
           "pct_forest": 3.4,
           "pct_agriculture": 47.0
         }
-      }
+      },
+      "census_village_pop": 10964
     },
     {
-      "name": "Maibong B",
+      "name": "Saniadi",
       "district": "Kamrup Rural",
       "lat": 26.2507,
       "lon": 90.8878,
@@ -4266,10 +4270,11 @@
           "pct_forest": 3.4,
           "pct_agriculture": 47.0
         }
-      }
+      },
+      "census_village_pop": 10894
     },
     {
-      "name": "North Lakhimpur C",
+      "name": "Barni",
       "district": "Kamrup Rural",
       "lat": 26.1413,
       "lon": 90.9016,
@@ -4395,10 +4400,11 @@
           "pct_forest": 3.4,
           "pct_agriculture": 47.0
         }
-      }
+      },
+      "census_village_pop": 7857
     },
     {
-      "name": "Kheroni D",
+      "name": "Rampur No.2",
       "district": "Kamrup Rural",
       "lat": 26.1449,
       "lon": 90.8,
@@ -4524,10 +4530,11 @@
           "pct_forest": 3.4,
           "pct_agriculture": 47.0
         }
-      }
+      },
+      "census_village_pop": 7554
     },
     {
-      "name": "Borhola E",
+      "name": "Tulsibari",
       "district": "Kamrup Rural",
       "lat": 26.1538,
       "lon": 90.7201,
@@ -4653,10 +4660,11 @@
           "pct_forest": 3.4,
           "pct_agriculture": 47.0
         }
-      }
+      },
+      "census_village_pop": 7214
     },
     {
-      "name": "Mangaldai Town F",
+      "name": "Tukura Para",
       "district": "Kamrup Rural",
       "lat": 26.273,
       "lon": 90.6735,
@@ -4782,10 +4790,11 @@
           "pct_forest": 3.4,
           "pct_agriculture": 47.0
         }
-      }
+      },
+      "census_village_pop": 7166
     },
     {
-      "name": "Biswanath Chariali A",
+      "name": "Sarkey Bosti",
       "district": "Nagaon",
       "lat": 26.4807,
       "lon": 92.68,
@@ -4911,10 +4920,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 8987
     },
     {
-      "name": "Dalgaon B",
+      "name": "Uttar Khatowal",
       "district": "Nagaon",
       "lat": 26.35,
       "lon": 92.807,
@@ -5040,10 +5050,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7944
     },
     {
-      "name": "Fakiragram C",
+      "name": "Charenghi Pathar",
       "district": "Nagaon",
       "lat": 26.2557,
       "lon": 92.68,
@@ -5169,10 +5180,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7768
     },
     {
-      "name": "Lumding D",
+      "name": "Dimaru Pathar F.V.",
       "district": "Nagaon",
       "lat": 26.35,
       "lon": 92.6223,
@@ -5298,10 +5310,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7587
     },
     {
-      "name": "Jamuna A",
+      "name": "Meleng Grant Gaon",
       "district": "Jorhat",
       "lat": 26.8316,
       "lon": 94.2,
@@ -5427,10 +5440,11 @@
           "pct_forest": 1.3,
           "pct_agriculture": 48.7
         }
-      }
+      },
+      "census_village_pop": 8572
     },
     {
-      "name": "Maibong B",
+      "name": "No.160 Grant",
       "district": "Jorhat",
       "lat": 26.75,
       "lon": 94.3034,
@@ -5556,10 +5570,11 @@
           "pct_forest": 1.3,
           "pct_agriculture": 48.7
         }
-      }
+      },
+      "census_village_pop": 6893
     },
     {
-      "name": "Sualkuchi C",
+      "name": "Chaliha Gaon",
       "district": "Jorhat",
       "lat": 26.6886,
       "lon": 94.2,
@@ -5685,10 +5700,11 @@
           "pct_forest": 1.3,
           "pct_agriculture": 48.7
         }
-      }
+      },
+      "census_village_pop": 6597
     },
     {
-      "name": "Na-Dih D",
+      "name": "Mariani Grant",
       "district": "Jorhat",
       "lat": 26.75,
       "lon": 94.1049,
@@ -5814,10 +5830,11 @@
           "pct_forest": 1.3,
           "pct_agriculture": 48.7
         }
-      }
+      },
+      "census_village_pop": 6494
     },
     {
-      "name": "Ghagarichadi A",
+      "name": "Dinjan T.E.",
       "district": "Dibrugarh",
       "lat": 27.5586,
       "lon": 94.91,
@@ -5943,10 +5960,11 @@
           "pct_forest": 0.5,
           "pct_agriculture": 54.8
         }
-      }
+      },
+      "census_village_pop": 8038
     },
     {
-      "name": "Palasbari B",
+      "name": "Namrup Chah Bagicha (West Of R)",
       "district": "Dibrugarh",
       "lat": 27.5435,
       "lon": 95.0373,
@@ -6072,10 +6090,11 @@
           "pct_forest": 0.5,
           "pct_agriculture": 54.8
         }
-      }
+      },
+      "census_village_pop": 7777
     },
     {
-      "name": "Chabua C",
+      "name": "Wilton 22/157 Orr",
       "district": "Dibrugarh",
       "lat": 27.4416,
       "lon": 94.9592,
@@ -6201,10 +6220,11 @@
           "pct_forest": 0.5,
           "pct_agriculture": 54.8
         }
-      }
+      },
+      "census_village_pop": 6536
     },
     {
-      "name": "Hailakandi Town D",
+      "name": "Filnuguri Grant 4/152",
       "district": "Dibrugarh",
       "lat": 27.3769,
       "lon": 94.91,
@@ -6330,10 +6350,11 @@
           "pct_forest": 0.5,
           "pct_agriculture": 54.8
         }
-      }
+      },
+      "census_village_pop": 5912
     },
     {
-      "name": "Lumding E",
+      "name": "Balijan T.E.",
       "district": "Dibrugarh",
       "lat": 27.4048,
       "lon": 94.797,
@@ -6459,10 +6480,11 @@
           "pct_forest": 0.5,
           "pct_agriculture": 54.8
         }
-      }
+      },
+      "census_village_pop": 5859
     },
     {
-      "name": "Sapekhati F",
+      "name": "Sealkati T.E. 252 No.Nlr",
       "district": "Dibrugarh",
       "lat": 27.5237,
       "lon": 94.8169,
@@ -6588,10 +6610,11 @@
           "pct_forest": 0.5,
           "pct_agriculture": 54.8
         }
-      }
+      },
+      "census_village_pop": 5825
     },
     {
-      "name": "Koppara A",
+      "name": "Powai T.E.",
       "district": "Tinsukia",
       "lat": 27.5956,
       "lon": 95.36,
@@ -6717,10 +6740,11 @@
           "pct_forest": 1.1,
           "pct_agriculture": 54.7
         }
-      }
+      },
+      "census_village_pop": 9101
     },
     {
-      "name": "Udalguri Town B",
+      "name": "Sukanguri T.E. 109/111 nlr",
       "district": "Tinsukia",
       "lat": 27.49,
       "lon": 95.4582,
@@ -6846,10 +6870,11 @@
           "pct_forest": 1.1,
           "pct_agriculture": 54.7
         }
-      }
+      },
+      "census_village_pop": 7591
     },
     {
-      "name": "Margherita C",
+      "name": "Guijan Gaon",
       "district": "Tinsukia",
       "lat": 27.4133,
       "lon": 95.36,
@@ -6975,10 +7000,11 @@
           "pct_forest": 1.1,
           "pct_agriculture": 54.7
         }
-      }
+      },
+      "census_village_pop": 7378
     },
     {
-      "name": "Morigaon Town D",
+      "name": "4 No.Santipur",
       "district": "Tinsukia",
       "lat": 27.49,
       "lon": 95.2943,
@@ -7104,10 +7130,11 @@
           "pct_forest": 1.1,
           "pct_agriculture": 54.7
         }
-      }
+      },
+      "census_village_pop": 6191
     },
     {
-      "name": "Badatop A",
+      "name": "Chari Duar Forest Prtd. Area",
       "district": "Sonitpur",
       "lat": 26.8284,
       "lon": 92.8,
@@ -7233,10 +7260,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 45913
     },
     {
-      "name": "Barpeta Town B",
+      "name": "Kochmara Protected Forest Area",
       "district": "Sonitpur",
       "lat": 26.8072,
       "lon": 92.899,
@@ -7362,10 +7390,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 16516
     },
     {
-      "name": "Gohpur C",
+      "name": "Na-Duar Reserve Forest",
       "district": "Sonitpur",
       "lat": 26.7137,
       "lon": 92.8629,
@@ -7491,10 +7520,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 12154
     },
     {
-      "name": "Golaghat Town D",
+      "name": "Michamari Gaon",
       "district": "Sonitpur",
       "lat": 26.6375,
       "lon": 92.8,
@@ -7620,10 +7650,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 7954
     },
     {
-      "name": "Bokajan E",
+      "name": "No.1 Bochasimalu Gaon",
       "district": "Sonitpur",
       "lat": 26.6911,
       "lon": 92.698,
@@ -7749,10 +7780,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 6207
     },
     {
-      "name": "Udalguri Town F",
+      "name": "Bar Bhagia Gaon",
       "district": "Sonitpur",
       "lat": 26.8173,
       "lon": 92.6834,
@@ -7878,10 +7910,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 5807
     },
     {
-      "name": "Karimganj Town A",
+      "name": "Maghuli Bargola",
       "district": "Lakhimpur",
       "lat": 27.3746,
       "lon": 94.1,
@@ -8007,10 +8040,11 @@
           "pct_forest": 1.0,
           "pct_agriculture": 57.8
         }
-      }
+      },
+      "census_village_pop": 8319
     },
     {
-      "name": "Harisinga B",
+      "name": "Harmoti 95 F.S. Grant",
       "district": "Lakhimpur",
       "lat": 27.2567,
       "lon": 94.1515,
@@ -8136,10 +8170,11 @@
           "pct_forest": 1.0,
           "pct_agriculture": 57.8
         }
-      }
+      },
+      "census_village_pop": 7619
     },
     {
-      "name": "Nagaon Town C",
+      "name": "Doulatpur",
       "district": "Lakhimpur",
       "lat": 27.1441,
       "lon": 94.1697,
@@ -8265,10 +8300,11 @@
           "pct_forest": 1.0,
           "pct_agriculture": 57.8
         }
-      }
+      },
+      "census_village_pop": 5839
     },
     {
-      "name": "Silchar Town D",
+      "name": "Pandhowa",
       "district": "Lakhimpur",
       "lat": 27.191,
       "lon": 94.0644,
@@ -8394,10 +8430,11 @@
           "pct_forest": 1.0,
           "pct_agriculture": 57.8
         }
-      }
+      },
+      "census_village_pop": 5138
     },
     {
-      "name": "Kumarikata E",
+      "name": "Bangal Mara P.G.R",
       "district": "Lakhimpur",
       "lat": 27.2708,
       "lon": 94.0051,
@@ -8523,10 +8560,11 @@
           "pct_forest": 1.0,
           "pct_agriculture": 57.8
         }
-      }
+      },
+      "census_village_pop": 4857
     },
     {
-      "name": "Dalgaon A",
+      "name": "Kaiborta Gaon (Rangamati T.E.)",
       "district": "Golaghat",
       "lat": 26.6168,
       "lon": 93.96,
@@ -8652,10 +8690,11 @@
           "pct_forest": 1.6,
           "pct_agriculture": 65.3
         }
-      }
+      },
+      "census_village_pop": 6327
     },
     {
-      "name": "Pathsala B",
+      "name": "Barchapari Bagicha",
       "district": "Golaghat",
       "lat": 26.5259,
       "lon": 94.0089,
@@ -8781,10 +8820,11 @@
           "pct_forest": 1.6,
           "pct_agriculture": 65.3
         }
-      }
+      },
+      "census_village_pop": 5793
     },
     {
-      "name": "Silchar Town C",
+      "name": "Murphulani Bagan Gaon",
       "district": "Golaghat",
       "lat": 26.4485,
       "lon": 94.0047,
@@ -8910,10 +8950,11 @@
           "pct_forest": 1.6,
           "pct_agriculture": 65.3
         }
-      }
+      },
+      "census_village_pop": 5531
     },
     {
-      "name": "Rupai D",
+      "name": "Gomariguri",
       "district": "Golaghat",
       "lat": 26.4073,
       "lon": 93.8854,
@@ -9039,10 +9080,11 @@
           "pct_forest": 1.6,
           "pct_agriculture": 65.3
         }
-      }
+      },
+      "census_village_pop": 5378
     },
     {
-      "name": "Hailakandi Town E",
+      "name": "No.1 Negheriting Grant",
       "district": "Golaghat",
       "lat": 26.5322,
       "lon": 93.8917,
@@ -9168,10 +9210,11 @@
           "pct_forest": 1.6,
           "pct_agriculture": 65.3
         }
-      }
+      },
+      "census_village_pop": 5201
     },
     {
-      "name": "Badatop A",
+      "name": "Towkok Grant No.2",
       "district": "Sivasagar",
       "lat": 27.0469,
       "lon": 94.63,
@@ -9297,10 +9340,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 17129
     },
     {
-      "name": "Sadiya B",
+      "name": "Hatsoi Grant-I",
       "district": "Sivasagar",
       "lat": 27.0001,
       "lon": 94.6919,
@@ -9426,10 +9470,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 10993
     },
     {
-      "name": "Jengraimukh C",
+      "name": "Kathia Khunda No.1",
       "district": "Sivasagar",
       "lat": 26.8738,
       "lon": 94.7072,
@@ -9555,10 +9600,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 9303
     },
     {
-      "name": "Nagaon Town D",
+      "name": "2 No.Khumtai T.E",
       "district": "Sivasagar",
       "lat": 26.8831,
       "lon": 94.5596,
@@ -9684,10 +9730,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 7396
     },
     {
-      "name": "Mazbat E",
+      "name": "Tingalibam T.G",
       "district": "Sivasagar",
       "lat": 27.0129,
       "lon": 94.5286,
@@ -9813,10 +9860,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 6373
     },
     {
-      "name": "Kumarikata A",
+      "name": "No.2 Murkong Selek",
       "district": "Dhemaji",
       "lat": 27.5459,
       "lon": 94.58,
@@ -9942,10 +9990,11 @@
           "pct_forest": 1.4,
           "pct_agriculture": 44.3
         }
-      }
+      },
+      "census_village_pop": 3875
     },
     {
-      "name": "Borhola B",
+      "name": "Chowal Dhuwa Bali",
       "district": "Dhemaji",
       "lat": 27.4034,
       "lon": 94.6953,
@@ -10071,10 +10120,11 @@
           "pct_forest": 1.4,
           "pct_agriculture": 44.3
         }
-      }
+      },
+      "census_village_pop": 3516
     },
     {
-      "name": "Golaghat Town C",
+      "name": "Mainapara Chetia",
       "district": "Dhemaji",
       "lat": 27.4111,
       "lon": 94.4781,
@@ -10200,10 +10250,11 @@
           "pct_forest": 1.4,
           "pct_agriculture": 44.3
         }
-      }
+      },
+      "census_village_pop": 3318
     },
     {
-      "name": "Tengakhat A",
+      "name": "Langting Rly. Station",
       "district": "Dima Hasao",
       "lat": 25.6032,
       "lon": 93.2,
@@ -10329,10 +10380,11 @@
           "pct_forest": 13.8,
           "pct_agriculture": 37.8
         }
-      }
+      },
+      "census_village_pop": 2163
     },
     {
-      "name": "Harisinga B",
+      "name": "Jatinga Khasia",
       "district": "Dima Hasao",
       "lat": 25.5194,
       "lon": 93.2596,
@@ -10458,10 +10510,11 @@
           "pct_forest": 13.8,
           "pct_agriculture": 37.8
         }
-      }
+      },
+      "census_village_pop": 2027
     },
     {
-      "name": "Rupai C",
+      "name": "Langting Hasin",
       "district": "Dima Hasao",
       "lat": 25.3989,
       "lon": 93.2735,
@@ -10587,10 +10640,11 @@
           "pct_forest": 13.8,
           "pct_agriculture": 37.8
         }
-      }
+      },
+      "census_village_pop": 1823
     },
     {
-      "name": "Sadiya D",
+      "name": "Garampani",
       "district": "Dima Hasao",
       "lat": 25.4248,
       "lon": 93.1454,
@@ -10716,10 +10770,11 @@
           "pct_forest": 13.8,
           "pct_agriculture": 37.8
         }
-      }
+      },
+      "census_village_pop": 1605
     },
     {
-      "name": "Azara E",
+      "name": "Harichandpur",
       "district": "Dima Hasao",
       "lat": 25.5203,
       "lon": 93.1374,
@@ -10845,10 +10900,11 @@
           "pct_forest": 13.8,
           "pct_agriculture": 37.8
         }
-      }
+      },
+      "census_village_pop": 1529
     },
     {
-      "name": "Bilasipara A",
+      "name": "Nawaibil",
       "district": "Karbi Anglong",
       "lat": 26.0679,
       "lon": 93.5,
@@ -10974,10 +11030,11 @@
           "pct_forest": 6.9,
           "pct_agriculture": 28.2
         }
-      }
+      },
+      "census_village_pop": 7303
     },
     {
-      "name": "Lachitgarh B",
+      "name": "Rongkhana Rf.",
       "district": "Karbi Anglong",
       "lat": 25.9566,
       "lon": 93.5752,
@@ -11103,10 +11160,11 @@
           "pct_forest": 6.9,
           "pct_agriculture": 28.2
         }
-      }
+      },
+      "census_village_pop": 5848
     },
     {
-      "name": "leticombuj C",
+      "name": "Uttar Borbil No.3",
       "district": "Karbi Anglong",
       "lat": 25.9562,
       "lon": 93.4241,
@@ -11232,10 +11290,11 @@
           "pct_forest": 6.9,
           "pct_agriculture": 28.2
         }
-      }
+      },
+      "census_village_pop": 3950
     },
     {
-      "name": "Maibong A",
+      "name": "Silcoorie Grant",
       "district": "Cachar",
       "lat": 24.8561,
       "lon": 92.85,
@@ -11361,10 +11420,11 @@
           "pct_forest": 5.7,
           "pct_agriculture": 45.2
         }
-      }
+      },
+      "census_village_pop": 19637
     },
     {
-      "name": "Haflong Town B",
+      "name": "Borakhai Grant",
       "district": "Cachar",
       "lat": 24.8411,
       "lon": 92.9212,
@@ -11490,10 +11550,11 @@
           "pct_forest": 5.7,
           "pct_agriculture": 45.2
         }
-      }
+      },
+      "census_village_pop": 12970
     },
     {
-      "name": "leticombuj C",
+      "name": "Dudhpatil Grant",
       "district": "Cachar",
       "lat": 24.7342,
       "lon": 92.964,
@@ -11619,10 +11680,11 @@
           "pct_forest": 5.7,
           "pct_agriculture": 45.2
         }
-      }
+      },
+      "census_village_pop": 10875
     },
     {
-      "name": "Diphu Town D",
+      "name": "Talkar Grant",
       "district": "Cachar",
       "lat": 24.6799,
       "lon": 92.85,
@@ -11748,10 +11810,11 @@
           "pct_forest": 5.7,
           "pct_agriculture": 45.2
         }
-      }
+      },
+      "census_village_pop": 8068
     },
     {
-      "name": "Boginadi E",
+      "name": "Dalu Grant",
       "district": "Cachar",
       "lat": 24.7649,
       "lon": 92.7893,
@@ -11877,10 +11940,11 @@
           "pct_forest": 5.7,
           "pct_agriculture": 45.2
         }
-      }
+      },
+      "census_village_pop": 7955
     },
     {
-      "name": "Pathsala F",
+      "name": "Binnakandi Grant",
       "district": "Cachar",
       "lat": 24.8543,
       "lon": 92.7559,
@@ -12006,10 +12070,11 @@
           "pct_forest": 5.7,
           "pct_agriculture": 45.2
         }
-      }
+      },
+      "census_village_pop": 7692
     },
     {
-      "name": "Koppara A",
+      "name": "Dhalchera F.V.",
       "district": "Hailakandi",
       "lat": 24.7448,
       "lon": 92.56,
@@ -12135,10 +12200,11 @@
           "pct_forest": 4.3,
           "pct_agriculture": 55.3
         }
-      }
+      },
+      "census_village_pop": 8631
     },
     {
-      "name": "Tingkhong B",
+      "name": "Chandipur Grant",
       "district": "Hailakandi",
       "lat": 24.68,
       "lon": 92.6503,
@@ -12264,10 +12330,11 @@
           "pct_forest": 4.3,
           "pct_agriculture": 55.3
         }
-      }
+      },
+      "census_village_pop": 7734
     },
     {
-      "name": "Kharupetia C",
+      "name": "Nunai F.V.",
       "district": "Hailakandi",
       "lat": 24.5604,
       "lon": 92.56,
@@ -12393,10 +12460,11 @@
           "pct_forest": 4.3,
           "pct_agriculture": 55.3
         }
-      }
+      },
+      "census_village_pop": 6924
     },
     {
-      "name": "Hajo D",
+      "name": "Bongalnagar Grant",
       "district": "Hailakandi",
       "lat": 24.68,
       "lon": 92.4726,
@@ -12522,10 +12590,11 @@
           "pct_forest": 4.3,
           "pct_agriculture": 55.3
         }
-      }
+      },
+      "census_village_pop": 6649
     },
     {
-      "name": "Hajo A",
+      "name": "Mirjapur Pt I",
       "district": "Karimganj",
       "lat": 24.9513,
       "lon": 92.35,
@@ -12651,10 +12720,11 @@
           "pct_forest": 9.6,
           "pct_agriculture": 33.6
         }
-      }
+      },
+      "census_village_pop": 7640
     },
     {
-      "name": "Dhubri Town B",
+      "name": "Kalinagar Cha Bagan Pt II",
       "district": "Karimganj",
       "lat": 24.87,
       "lon": 92.4199,
@@ -12780,10 +12850,11 @@
           "pct_forest": 9.6,
           "pct_agriculture": 33.6
         }
-      }
+      },
+      "census_village_pop": 6906
     },
     {
-      "name": "Hojai Town C",
+      "name": "Isabeel",
       "district": "Karimganj",
       "lat": 24.8154,
       "lon": 92.35,
@@ -12909,10 +12980,11 @@
           "pct_forest": 9.6,
           "pct_agriculture": 33.6
         }
-      }
+      },
+      "census_village_pop": 6790
     },
     {
-      "name": "Sadiya D",
+      "name": "Keshorkapan Pt I",
       "district": "Karimganj",
       "lat": 24.87,
       "lon": 92.2015,
@@ -13038,10 +13110,11 @@
           "pct_forest": 9.6,
           "pct_agriculture": 33.6
         }
-      }
+      },
+      "census_village_pop": 6204
     },
     {
-      "name": "Chingra A",
+      "name": "Tatikata Pathar",
       "district": "Morigaon",
       "lat": 26.389,
       "lon": 92.35,
@@ -13167,10 +13240,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 8288
     },
     {
-      "name": "Pathsala B",
+      "name": "Silpukhuri",
       "district": "Morigaon",
       "lat": 26.2723,
       "lon": 92.4186,
@@ -13296,10 +13370,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7632
     },
     {
-      "name": "Sadiya C",
+      "name": "Hatimuria",
       "district": "Morigaon",
       "lat": 26.1406,
       "lon": 92.4295,
@@ -13425,10 +13500,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7478
     },
     {
-      "name": "Kamalpur D",
+      "name": "Kalikajari",
       "district": "Morigaon",
       "lat": 26.1666,
       "lon": 92.2894,
@@ -13554,10 +13630,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7266
     },
     {
-      "name": "Silonijan E",
+      "name": "Kuranibori",
       "district": "Morigaon",
       "lat": 26.2784,
       "lon": 92.2626,
@@ -13683,10 +13760,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7107
     },
     {
-      "name": "North Lakhimpur A",
+      "name": "Kurihamari",
       "district": "Nalbari",
       "lat": 26.5435,
       "lon": 91.44,
@@ -13812,10 +13890,11 @@
           "pct_forest": 0.2,
           "pct_agriculture": 48.9
         }
-      }
+      },
+      "census_village_pop": 23867
     },
     {
-      "name": "Jorhat Town B",
+      "name": "Bhanganmari",
       "district": "Nalbari",
       "lat": 26.4135,
       "lon": 91.486,
@@ -13941,10 +14020,11 @@
           "pct_forest": 0.2,
           "pct_agriculture": 48.9
         }
-      }
+      },
+      "census_village_pop": 15252
     },
     {
-      "name": "North Salmara C",
+      "name": "Kandhbari",
       "district": "Nalbari",
       "lat": 26.3872,
       "lon": 91.3486,
@@ -14070,10 +14150,11 @@
           "pct_forest": 0.2,
           "pct_agriculture": 48.9
         }
-      }
+      },
+      "census_village_pop": 9303
     },
     {
-      "name": "Dhemaji Town A",
+      "name": "Satra Kanara N.C.",
       "district": "Barpeta",
       "lat": 26.4076,
       "lon": 91.0,
@@ -14199,10 +14280,11 @@
           "pct_forest": 0.3,
           "pct_agriculture": 49.5
         }
-      }
+      },
+      "census_village_pop": 30994
     },
     {
-      "name": "North Salmara B",
+      "name": "Kawaimarikaragari Reserve",
       "district": "Barpeta",
       "lat": 26.3576,
       "lon": 91.1158,
@@ -14328,10 +14410,11 @@
           "pct_forest": 0.3,
           "pct_agriculture": 49.5
         }
-      }
+      },
+      "census_village_pop": 24581
     },
     {
-      "name": "Biswanath Chariali C",
+      "name": "Balikuri N.C.",
       "district": "Barpeta",
       "lat": 26.2075,
       "lon": 91.0817,
@@ -14457,10 +14540,11 @@
           "pct_forest": 0.3,
           "pct_agriculture": 49.5
         }
-      }
+      },
+      "census_village_pop": 13487
     },
     {
-      "name": "Sapatgram D",
+      "name": "Kholabandha N.C.",
       "district": "Barpeta",
       "lat": 26.2658,
       "lon": 90.9606,
@@ -14586,10 +14670,11 @@
           "pct_forest": 0.3,
           "pct_agriculture": 49.5
         }
-      }
+      },
+      "census_village_pop": 12968
     },
     {
-      "name": "Chouldhury E",
+      "name": "Bhatnapaity Char N.C.",
       "district": "Barpeta",
       "lat": 26.3516,
       "lon": 90.9027,
@@ -14715,10 +14800,11 @@
           "pct_forest": 0.3,
           "pct_agriculture": 49.5
         }
-      }
+      },
+      "census_village_pop": 11554
     },
     {
-      "name": "Tinsukia Town A",
+      "name": "Amguri Forest Block",
       "district": "Kokrajhar",
       "lat": 26.4999,
       "lon": 90.27,
@@ -14844,10 +14930,11 @@
           "pct_forest": 27.5,
           "pct_agriculture": 48.6
         }
-      }
+      },
+      "census_village_pop": 8393
     },
     {
-      "name": "leticombuj B",
+      "name": "Bashbari Forest Block",
       "district": "Kokrajhar",
       "lat": 26.4,
       "lon": 90.4,
@@ -14973,10 +15060,11 @@
           "pct_forest": 27.5,
           "pct_agriculture": 48.6
         }
-      }
+      },
+      "census_village_pop": 7901
     },
     {
-      "name": "Fakiragram C",
+      "name": "Tengnarbhita",
       "district": "Kokrajhar",
       "lat": 26.344,
       "lon": 90.27,
@@ -15102,10 +15190,11 @@
           "pct_forest": 27.5,
           "pct_agriculture": 48.6
         }
-      }
+      },
+      "census_village_pop": 5495
     },
     {
-      "name": "Rakhaldubi D",
+      "name": "Shrirampur No.1",
       "district": "Kokrajhar",
       "lat": 26.4,
       "lon": 90.155,
@@ -15231,10 +15320,11 @@
           "pct_forest": 27.5,
           "pct_agriculture": 48.6
         }
-      }
+      },
+      "census_village_pop": 5026
     },
     {
-      "name": "Karimganj Town A",
+      "name": "Amteka F.V.",
       "district": "Chirang",
       "lat": 26.5896,
       "lon": 90.45,
@@ -15360,10 +15450,11 @@
           "pct_forest": 15.0,
           "pct_agriculture": 46.3
         }
-      }
+      },
+      "census_village_pop": 5646
     },
     {
-      "name": "Morigaon Town B",
+      "name": "Hatisar F.V",
       "district": "Chirang",
       "lat": 26.45,
       "lon": 90.5681,
@@ -15489,10 +15580,11 @@
           "pct_forest": 15.0,
           "pct_agriculture": 46.3
         }
-      }
+      },
+      "census_village_pop": 5334
     },
     {
-      "name": "Howly C",
+      "name": "Koilamoila FV",
       "district": "Chirang",
       "lat": 26.3985,
       "lon": 90.45,
@@ -15618,10 +15710,11 @@
           "pct_forest": 15.0,
           "pct_agriculture": 46.3
         }
-      }
+      },
+      "census_village_pop": 4843
     },
     {
-      "name": "Chabua D",
+      "name": "Malivita F/Block(Including Relief Camp)",
       "district": "Chirang",
       "lat": 26.45,
       "lon": 90.3003,
@@ -15747,10 +15840,11 @@
           "pct_forest": 15.0,
           "pct_agriculture": 46.3
         }
-      }
+      },
+      "census_village_pop": 4784
     },
     {
-      "name": "Hamren A",
+      "name": "Borpathar Pt",
       "district": "Bongaigaon",
       "lat": 26.5567,
       "lon": 90.56,
@@ -15876,10 +15970,11 @@
           "pct_forest": 4.9,
           "pct_agriculture": 56.2
         }
-      }
+      },
+      "census_village_pop": 5458
     },
     {
-      "name": "Narayanpur B",
+      "name": "Bharalkunda Beel",
       "district": "Bongaigaon",
       "lat": 26.5053,
       "lon": 90.6686,
@@ -16005,10 +16100,11 @@
           "pct_forest": 4.9,
           "pct_agriculture": 56.2
         }
-      }
+      },
+      "census_village_pop": 5111
     },
     {
-      "name": "Goalpara Town C",
+      "name": "Chedamari",
       "district": "Bongaigaon",
       "lat": 26.3667,
       "lon": 90.6351,
@@ -16134,10 +16230,11 @@
           "pct_forest": 4.9,
           "pct_agriculture": 56.2
         }
-      }
+      },
+      "census_village_pop": 4837
     },
     {
-      "name": "Biswanath Chariali D",
+      "name": "Nasatra",
       "district": "Bongaigaon",
       "lat": 26.3659,
       "lon": 90.4844,
@@ -16263,10 +16360,11 @@
           "pct_forest": 4.9,
           "pct_agriculture": 56.2
         }
-      }
+      },
+      "census_village_pop": 4191
     },
     {
-      "name": "leticombuj E",
+      "name": "Dolaigaon Pt. I,II & III",
       "district": "Bongaigaon",
       "lat": 26.5045,
       "lon": 90.4539,
@@ -16392,10 +16490,11 @@
           "pct_forest": 4.9,
           "pct_agriculture": 56.2
         }
-      }
+      },
+      "census_village_pop": 4185
     },
     {
-      "name": "Jalukbari A",
+      "name": "Borokalia Sharsho",
       "district": "Dhubri",
       "lat": 26.1221,
       "lon": 90.0,
@@ -16521,10 +16620,11 @@
           "pct_forest": 2.5,
           "pct_agriculture": 56.6
         }
-      }
+      },
+      "census_village_pop": 10628
     },
     {
-      "name": "Golaghat Town B",
+      "name": "Nayeralga Pt.III",
       "district": "Dhubri",
       "lat": 25.9807,
       "lon": 90.0681,
@@ -16650,10 +16750,11 @@
           "pct_forest": 2.5,
           "pct_agriculture": 56.6
         }
-      }
+      },
+      "census_village_pop": 9969
     },
     {
-      "name": "Titabor C",
+      "name": "Fulerchar Pt.III",
       "district": "Dhubri",
       "lat": 25.9725,
       "lon": 89.9177,
@@ -16779,10 +16880,11 @@
           "pct_forest": 2.5,
           "pct_agriculture": 56.6
         }
-      }
+      },
+      "census_village_pop": 9373
     },
     {
-      "name": "Sualkuchi A",
+      "name": "Aolatoli",
       "district": "Goalpara",
       "lat": 26.2454,
       "lon": 90.62,
@@ -16908,10 +17010,11 @@
           "pct_forest": 14.7,
           "pct_agriculture": 45.9
         }
-      }
+      },
+      "census_village_pop": 12193
     },
     {
-      "name": "North Lakhimpur B",
+      "name": "Baladmari Char Pt-II",
       "district": "Goalpara",
       "lat": 26.2101,
       "lon": 90.7434,
@@ -17037,10 +17140,11 @@
           "pct_forest": 14.7,
           "pct_agriculture": 45.9
         }
-      }
+      },
+      "census_village_pop": 7767
     },
     {
-      "name": "Barpeta Town C",
+      "name": "Batabari",
       "district": "Goalpara",
       "lat": 26.0828,
       "lon": 90.6833,
@@ -17166,10 +17270,11 @@
           "pct_forest": 14.7,
           "pct_agriculture": 45.9
         }
-      }
+      },
+      "census_village_pop": 7704
     },
     {
-      "name": "Jagiroad D",
+      "name": "Krishnai Guria Pt-I",
       "district": "Goalpara",
       "lat": 26.0725,
       "lon": 90.5492,
@@ -17295,10 +17400,11 @@
           "pct_forest": 14.7,
           "pct_agriculture": 45.9
         }
-      }
+      },
+      "census_village_pop": 7663
     },
     {
-      "name": "Chouldhury E",
+      "name": "Tarangapur",
       "district": "Goalpara",
       "lat": 26.2101,
       "lon": 90.4965,
@@ -17424,10 +17530,11 @@
           "pct_forest": 14.7,
           "pct_agriculture": 45.9
         }
-      }
+      },
+      "census_village_pop": 6372
     },
     {
-      "name": "North Lakhimpur A",
+      "name": "Ratanpur Miri Gaon",
       "district": "Majuli",
       "lat": 27.0085,
       "lon": 94.0,
@@ -17553,10 +17660,11 @@
           "pct_forest": 1.3,
           "pct_agriculture": 48.7
         }
-      }
+      },
+      "census_village_pop": 5085
     },
     {
-      "name": "Naharkatia B",
+      "name": "Nagadholi",
       "district": "Majuli",
       "lat": 26.95,
       "lon": 94.1231,
@@ -17682,10 +17790,11 @@
           "pct_forest": 1.3,
           "pct_agriculture": 48.7
         }
-      }
+      },
+      "census_village_pop": 4866
     },
     {
-      "name": "Beltola C",
+      "name": "No.163 Grant",
       "district": "Majuli",
       "lat": 26.8221,
       "lon": 94.0,
@@ -17811,10 +17920,11 @@
           "pct_forest": 1.3,
           "pct_agriculture": 48.7
         }
-      }
+      },
+      "census_village_pop": 4484
     },
     {
-      "name": "Dispur D",
+      "name": "Dholajan Grant",
       "district": "Majuli",
       "lat": 26.95,
       "lon": 93.9046,
@@ -17940,10 +18050,11 @@
           "pct_forest": 1.3,
           "pct_agriculture": 48.7
         }
-      }
+      },
+      "census_village_pop": 4236
     },
     {
-      "name": "Fakiragram A",
+      "name": "Kakripara Pt.I",
       "district": "South Salmara",
       "lat": 26.0454,
       "lon": 90.05,
@@ -18069,10 +18180,11 @@
           "pct_forest": 2.5,
           "pct_agriculture": 56.6
         }
-      }
+      },
+      "census_village_pop": 9370
     },
     {
-      "name": "Dibrugarh Town B",
+      "name": "Chagolia Pt.II",
       "district": "South Salmara",
       "lat": 25.9395,
       "lon": 90.1184,
@@ -18198,10 +18310,11 @@
           "pct_forest": 2.5,
           "pct_agriculture": 56.6
         }
-      }
+      },
+      "census_village_pop": 9368
     },
     {
-      "name": "Fatasil C",
+      "name": "Jhawdanga Pt.III",
       "district": "South Salmara",
       "lat": 25.8454,
       "lon": 90.1447,
@@ -18327,10 +18440,11 @@
           "pct_forest": 2.5,
           "pct_agriculture": 56.6
         }
-      }
+      },
+      "census_village_pop": 9302
     },
     {
-      "name": "Jengraimukh D",
+      "name": "Madhusaulmari Pt.II",
       "district": "South Salmara",
       "lat": 25.7977,
       "lon": 90.05,
@@ -18456,10 +18570,11 @@
           "pct_forest": 2.5,
           "pct_agriculture": 56.6
         }
-      }
+      },
+      "census_village_pop": 9071
     },
     {
-      "name": "Mancachar E",
+      "name": "Thakurarbari",
       "district": "South Salmara",
       "lat": 25.8298,
       "lon": 89.9284,
@@ -18585,10 +18700,11 @@
           "pct_forest": 2.5,
           "pct_agriculture": 56.6
         }
-      }
+      },
+      "census_village_pop": 8976
     },
     {
-      "name": "Mariani F",
+      "name": "Maira Kuchi Pt.I",
       "district": "South Salmara",
       "lat": 25.9412,
       "lon": 89.9786,
@@ -18714,10 +18830,11 @@
           "pct_forest": 2.5,
           "pct_agriculture": 56.6
         }
-      }
+      },
+      "census_village_pop": 8554
     },
     {
-      "name": "Haflong Town A",
+      "name": "Niz-Baghmara",
       "district": "Biswanath",
       "lat": 26.8853,
       "lon": 93.15,
@@ -18843,10 +18960,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 5725
     },
     {
-      "name": "Sualkuchi B",
+      "name": "Bhaluk-Pung Nigam",
       "district": "Biswanath",
       "lat": 26.8369,
       "lon": 93.2635,
@@ -18972,10 +19090,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 5517
     },
     {
-      "name": "Mariani C",
+      "name": "No.1 Dolabari",
       "district": "Biswanath",
       "lat": 26.7259,
       "lon": 93.2039,
@@ -19101,10 +19220,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 5259
     },
     {
-      "name": "Koppara D",
+      "name": "Niz-Bihaguri Gaon",
       "district": "Biswanath",
       "lat": 26.7332,
       "lon": 93.1014,
@@ -19230,10 +19350,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 5240
     },
     {
-      "name": "Tingkhong E",
+      "name": "Phulbari T.E.",
       "district": "Biswanath",
       "lat": 26.845,
       "lon": 93.0115,
@@ -19359,10 +19480,11 @@
           "pct_forest": 2.3,
           "pct_agriculture": 48.4
         }
-      }
+      },
+      "census_village_pop": 5096
     },
     {
-      "name": "Mancachar A",
+      "name": "Rajmai Grant",
       "district": "Charaideo",
       "lat": 27.2372,
       "lon": 94.8,
@@ -19488,10 +19610,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 6326
     },
     {
-      "name": "Chouldhury B",
+      "name": "Naharhabi Grant & Lakwa Rly. Stn.",
       "district": "Charaideo",
       "lat": 27.1222,
       "lon": 94.8683,
@@ -19617,10 +19740,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 5969
     },
     {
-      "name": "Morigaon Town C",
+      "name": "Teok Gaon",
       "district": "Charaideo",
       "lat": 27.0208,
       "lon": 94.8576,
@@ -19746,10 +19870,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 5533
     },
     {
-      "name": "Mangaldai Town D",
+      "name": "Ranga Pothar",
       "district": "Charaideo",
       "lat": 27.0426,
       "lon": 94.7583,
@@ -19875,10 +20000,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 5406
     },
     {
-      "name": "Kharupetia E",
+      "name": "Haluadang Grant",
       "district": "Charaideo",
       "lat": 27.1158,
       "lon": 94.7515,
@@ -20004,10 +20130,11 @@
           "pct_forest": 2.7,
           "pct_agriculture": 63.4
         }
-      }
+      },
+      "census_village_pop": 5223
     },
     {
-      "name": "Puthimari A",
+      "name": "Lailuri",
       "district": "Hojai",
       "lat": 26.1369,
       "lon": 92.85,
@@ -20133,10 +20260,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7472
     },
     {
-      "name": "Kharupetia B",
+      "name": "Dablong Gaon (Deblong Gaon)",
       "district": "Hojai",
       "lat": 25.9346,
       "lon": 92.9633,
@@ -20262,10 +20390,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7332
     },
     {
-      "name": "Nagaon Town C",
+      "name": "Dhania Bheti Gaon",
       "district": "Hojai",
       "lat": 25.9617,
       "lon": 92.7837,
@@ -20391,10 +20520,11 @@
           "pct_forest": 1.5,
           "pct_agriculture": 63.6
         }
-      }
+      },
+      "census_village_pop": 7201
     },
     {
-      "name": "Hailakandi Town A",
+      "name": "Mailoo Bl No.4",
       "district": "West Karbi Anglong",
       "lat": 26.2475,
       "lon": 93.1,
@@ -20520,10 +20650,11 @@
           "pct_forest": 6.9,
           "pct_agriculture": 28.2
         }
-      }
+      },
+      "census_village_pop": 3700
     },
     {
-      "name": "Lungru B",
+      "name": "Dihingia",
       "district": "West Karbi Anglong",
       "lat": 26.187,
       "lon": 93.1641,
@@ -20649,10 +20780,11 @@
           "pct_forest": 6.9,
           "pct_agriculture": 28.2
         }
-      }
+      },
+      "census_village_pop": 3671
     },
     {
-      "name": "Nagaon Town C",
+      "name": "Nambar Bagan",
       "district": "West Karbi Anglong",
       "lat": 26.0872,
       "lon": 93.2088,
@@ -20778,10 +20910,11 @@
           "pct_forest": 6.9,
           "pct_agriculture": 28.2
         }
-      }
+      },
+      "census_village_pop": 3599
     },
     {
-      "name": "Fakiragram D",
+      "name": "Marakar Daiguri B. 1,2,3",
       "district": "West Karbi Anglong",
       "lat": 26.0283,
       "lon": 93.1,
@@ -20907,10 +21040,11 @@
           "pct_forest": 6.9,
           "pct_agriculture": 28.2
         }
-      }
+      },
+      "census_village_pop": 3215
     },
     {
-      "name": "Dibrugarh Town E",
+      "name": "Khat Khati Tila Bosti",
       "district": "West Karbi Anglong",
       "lat": 26.1248,
       "lon": 93.0564,
@@ -21036,10 +21170,11 @@
           "pct_forest": 6.9,
           "pct_agriculture": 28.2
         }
-      }
+      },
+      "census_village_pop": 3195
     },
     {
-      "name": "Mariani F",
+      "name": "Belbari",
       "district": "West Karbi Anglong",
       "lat": 26.188,
       "lon": 93.0341,
@@ -21165,10 +21300,11 @@
           "pct_forest": 6.9,
           "pct_agriculture": 28.2
         }
-      }
+      },
+      "census_village_pop": 3153
     },
     {
-      "name": "Mangaldai Town A",
+      "name": "Amtola",
       "district": "Baksa",
       "lat": 26.6468,
       "lon": 90.7,
@@ -21294,10 +21430,11 @@
           "pct_forest": 2.0,
           "pct_agriculture": 55.8
         }
-      }
+      },
+      "census_village_pop": 7084
     },
     {
-      "name": "Diphu Town B",
+      "name": "Bhukuradia",
       "district": "Baksa",
       "lat": 26.5859,
       "lon": 90.8104,
@@ -21423,10 +21560,11 @@
           "pct_forest": 2.0,
           "pct_agriculture": 55.8
         }
-      }
+      },
+      "census_village_pop": 6785
     },
     {
-      "name": "Jalukbari C",
+      "name": "Manah Kuchi",
       "district": "Baksa",
       "lat": 26.4483,
       "lon": 90.7739,
@@ -21552,10 +21690,11 @@
           "pct_forest": 2.0,
           "pct_agriculture": 55.8
         }
-      }
+      },
+      "census_village_pop": 6290
     },
     {
-      "name": "Rupai D",
+      "name": "Sarabari",
       "district": "Baksa",
       "lat": 26.4709,
       "lon": 90.6426,
@@ -21681,10 +21820,11 @@
           "pct_forest": 2.0,
           "pct_agriculture": 55.8
         }
-      }
+      },
+      "census_village_pop": 6092
     },
     {
-      "name": "Sapekhati E",
+      "name": "Choudhuri Para",
       "district": "Baksa",
       "lat": 26.5907,
       "lon": 90.5748,
@@ -21810,10 +21950,11 @@
           "pct_forest": 2.0,
           "pct_agriculture": 55.8
         }
-      }
+      },
+      "census_village_pop": 6020
     },
     {
-      "name": "Jalukbari A",
+      "name": "Baghpori Chapori",
       "district": "Udalguri",
       "lat": 26.87,
       "lon": 92.1,
@@ -21939,10 +22080,11 @@
           "pct_forest": 1.6,
           "pct_agriculture": 47.9
         }
-      }
+      },
+      "census_village_pop": 9927
     },
     {
-      "name": "Baska B",
+      "name": "No.2 Magurmari",
       "district": "Udalguri",
       "lat": 26.75,
       "lon": 92.238,
@@ -22068,10 +22210,11 @@
           "pct_forest": 1.6,
           "pct_agriculture": 47.9
         }
-      }
+      },
+      "census_village_pop": 8032
     },
     {
-      "name": "Hajo C",
+      "name": "Baruajhar 1/2",
       "district": "Udalguri",
       "lat": 26.689,
       "lon": 92.1,
@@ -22197,10 +22340,11 @@
           "pct_forest": 1.6,
           "pct_agriculture": 47.9
         }
-      }
+      },
+      "census_village_pop": 7185
     },
     {
-      "name": "Naobicha D",
+      "name": "Kira Kara N.C.",
       "district": "Udalguri",
       "lat": 26.75,
       "lon": 91.9562,
@@ -22326,10 +22470,11 @@
           "pct_forest": 1.6,
           "pct_agriculture": 47.9
         }
-      }
+      },
+      "census_village_pop": 6190
     },
     {
-      "name": "Silchar Town A",
+      "name": "Jagara",
       "district": "Tamulpur",
       "lat": 26.7052,
       "lon": 91.9,
@@ -22455,10 +22600,11 @@
           "pct_forest": 0.2,
           "pct_agriculture": 48.9
         }
-      }
+      },
+      "census_village_pop": 6842
     },
     {
-      "name": "Jengraimukh B",
+      "name": "Loharkhatha",
       "district": "Tamulpur",
       "lat": 26.5768,
       "lon": 92.0267,
@@ -22584,10 +22730,11 @@
           "pct_forest": 0.2,
           "pct_agriculture": 48.9
         }
-      }
+      },
+      "census_village_pop": 6384
     },
     {
-      "name": "Chingra C",
+      "name": "Chamata",
       "district": "Tamulpur",
       "lat": 26.5769,
       "lon": 91.7734,
@@ -22713,10 +22860,11 @@
           "pct_forest": 0.2,
           "pct_agriculture": 48.9
         }
-      }
+      },
+      "census_village_pop": 6114
     },
     {
-      "name": "Barpeta Town A",
+      "name": "Nichuka",
       "district": "Bajali",
       "lat": 26.5197,
       "lon": 91.2,
@@ -22842,10 +22990,11 @@
           "pct_forest": 0.3,
           "pct_agriculture": 49.5
         }
-      }
+      },
+      "census_village_pop": 8673
     },
     {
-      "name": "Palasbari B",
+      "name": "Mandia Bardalani N.C.",
       "district": "Bajali",
       "lat": 26.45,
       "lon": 91.3294,
@@ -22971,10 +23120,11 @@
           "pct_forest": 0.3,
           "pct_agriculture": 49.5
         }
-      }
+      },
+      "census_village_pop": 8607
     },
     {
-      "name": "Chabua C",
+      "name": "Barbala",
       "district": "Bajali",
       "lat": 26.3699,
       "lon": 91.2,
@@ -23100,10 +23250,11 @@
           "pct_forest": 0.3,
           "pct_agriculture": 49.5
         }
-      }
+      },
+      "census_village_pop": 8277
     },
     {
-      "name": "Kharupetia D",
+      "name": "3No.Alupati N.C.",
       "district": "Bajali",
       "lat": 26.45,
       "lon": 91.088,
@@ -23229,10 +23380,11 @@
           "pct_forest": 0.3,
           "pct_agriculture": 49.5
         }
-      }
+      },
+      "census_village_pop": 8046
     },
     {
-      "name": "Na-Dih A",
+      "name": "Dhalpur No.3 (Dijolpur No.3)",
       "district": "Darrang",
       "lat": 26.7025,
       "lon": 92.1,
@@ -23358,10 +23510,11 @@
           "pct_forest": 6.8,
           "pct_agriculture": 45.8
         }
-      }
+      },
+      "census_village_pop": 6115
     },
     {
-      "name": "Nagaon Town B",
+      "name": "Bandia Gaon",
       "district": "Darrang",
       "lat": 26.6915,
       "lon": 92.1718,
@@ -23487,10 +23640,11 @@
           "pct_forest": 6.8,
           "pct_agriculture": 45.8
         }
-      }
+      },
+      "census_village_pop": 6107
     },
     {
-      "name": "Mancachar C",
+      "name": "Daipangpara",
       "district": "Darrang",
       "lat": 26.5777,
       "lon": 92.2252,
@@ -23616,10 +23770,11 @@
           "pct_forest": 6.8,
           "pct_agriculture": 45.8
         }
-      }
+      },
+      "census_village_pop": 6035
     },
     {
-      "name": "Howly D",
+      "name": "Khataniapara",
       "district": "Darrang",
       "lat": 26.5539,
       "lon": 92.1,
@@ -23745,10 +23900,11 @@
           "pct_forest": 6.8,
           "pct_agriculture": 45.8
         }
-      }
+      },
+      "census_village_pop": 5968
     },
     {
-      "name": "Dhemaji Town E",
+      "name": "Aparia",
       "district": "Darrang",
       "lat": 26.6073,
       "lon": 92.026,
@@ -23874,10 +24030,11 @@
           "pct_forest": 6.8,
           "pct_agriculture": 45.8
         }
-      }
+      },
+      "census_village_pop": 5789
     },
     {
-      "name": "Harisinga F",
+      "name": "Mowamari",
       "district": "Darrang",
       "lat": 26.7054,
       "lon": 92.0041,
@@ -24003,7 +24160,8 @@
           "pct_forest": 6.8,
           "pct_agriculture": 45.8
         }
-      }
+      },
+      "census_village_pop": 5619
     }
   ],
   "relocation_sites": [
