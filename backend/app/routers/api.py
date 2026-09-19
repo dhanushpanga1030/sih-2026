@@ -4,11 +4,18 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel
 
-from app.cache import cache_response, invalidate_cache
-from app.engines.nlg_engine import nlg_engine
-from app.engines.path_selector import path_selector
-from app.engines.relocation_engine import relocation_engine
 from app.engines.shap_explainer import explainer
+from app.engines.nlg_engine import nlg_engine
+from app.engines.relocation_engine import relocation_engine
+from app.engines.drie_engine import drie_engine
+from app.engines.matching_engine import matching_engine
+from app.engines.route_intelligence import route_intelligence_engine
+from app.engines.multi_hazard_sim import multi_hazard_simulator
+from app.engines.household_vulnerability import household_vulnerability_engine
+from app.engines.report_generator import report_generator
+from app.workflow.state_machine import workflow_manager
+from app.cache import cache_response, invalidate_cache
+from app.engines.path_selector import path_selector
 from app.routers.auth_router import require_role
 
 router = APIRouter()
@@ -72,14 +79,31 @@ class HabitationResponse(BaseModel):
 class ScenarioRequest(BaseModel):
     rainfall_delta: float = 20.0
     habitation: str | None = None
+    seismic_magnitude: float = 0
+    landslide_trigger: float = 0
+    river_level_rise: float = 0
+    embankment_breach: bool = False
+    population_growth_pct: float = 0
 
     class Config:
         json_schema_extra = {
             "example": {
                 "rainfall_delta": 20.0,
                 "habitation": "Kamrup Village",
+                "seismic_magnitude": 0,
+                "landslide_trigger": 0,
+                "river_level_rise": 0,
+                "embankment_breach": False,
+                "population_growth_pct": 0,
             }
         }
+
+
+class WorkflowTransitionRequest(BaseModel):
+    item_id: str
+    new_state: str
+    actor: str = "system"
+    note: str = ""
 
 
 class ExplanationResponse(BaseModel):
@@ -104,8 +128,15 @@ def load_data():
     return _data
 
 
-def habitation_to_features(h: dict) -> dict:
-    """Convert habitation data to ML feature vector matching trained model's 28 features."""
+def _find_district(data: dict, district_name: str) -> dict | None:
+    for d in data["districts"]:
+        if d["name"].lower() == district_name.lower():
+            return d
+    return None
+
+
+def habitation_to_features(h: dict, dist: dict = None) -> dict:
+    """Convert habitation data to ML feature vector matching trained model's 56 features."""
     haz = h.get("hazard", {})
     vuln = h.get("vulnerability", {})
     flood_risk = haz.get("flood", 0)
@@ -114,6 +145,25 @@ def habitation_to_features(h: dict) -> dict:
     dfsi = h.get("dfsi", 12)
     pop = h.get("population", 1000)
     area = max(h.get("area_sq_km", 1), 0.01)
+    infra = vuln.get("infrastructure_quality", 0.5)
+
+    rr = h.get("real_rainfall", {})
+    rainfall_annual = rr.get("rainfall_annual_mm", 0)
+    rainfall_monsoon = rr.get("rainfall_monsoon_mm", 0)
+
+    # Census 2011 data
+    c = (dist or {}).get("census_2011", {})
+    ce = c.get("education", {})
+    ch = c.get("health", {})
+    cw = c.get("water", {})
+    ct = c.get("transport", {})
+    cc = c.get("communication", {})
+    cp = c.get("power", {})
+    cd = c.get("drainage", {})
+    cs = c.get("sanitation", {})
+    cl = c.get("land_use", {})
+    sc_pct = c.get("total_sc", 0) / max(c.get("total_population", 1), 1) * 100
+    st_pct = c.get("total_st", 0) / max(c.get("total_population", 1), 1) * 100
 
     return {
         "flood_score": flood_risk,
@@ -125,7 +175,7 @@ def habitation_to_features(h: dict) -> dict:
         "poverty_index": vuln.get("poverty_index", 0.3),
         "age_vulnerability": vuln.get("age_vulnerability", 0.2),
         "disability_index": vuln.get("disability_index", 0.1),
-        "infra_quality": vuln.get("infrastructure_quality", 0.5),
+        "infra_quality": infra,
         "vuln_combined": vuln_combined,
         "exposure": exposure,
         "population": pop,
@@ -141,9 +191,39 @@ def habitation_to_features(h: dict) -> dict:
         "flood_fatalities": h.get("total_flood_fatalities", 5),
         "flooded_area_pct": h.get("corrected_flooded_area_pct", 5),
         "permanent_water": h.get("permanent_water_pct", 1),
+        "rainfall_annual_mm": rainfall_annual,
+        "rainfall_max_monthly_mm": rr.get("rainfall_max_monthly_mm", 0),
+        "rainfall_monsoon_mm": rainfall_monsoon,
+        "rainfall_monsoon_pct": rr.get("rainfall_monsoon_pct", 0),
+        "river_water_level_max_m": rr.get("river_water_level_max_m", 0),
+        # Census 2011
+        "sex_ratio": c.get("sex_ratio", 0),
+        "sc_pct": sc_pct,
+        "st_pct": st_pct,
+        "schools_per_village": ce.get("schools_per_village", 0),
+        "total_schools": ce.get("total_schools", 0),
+        "health_facilities_per_village": ch.get("facilities_per_village", 0),
+        "total_health_facilities": ch.get("total_facilities", 0),
+        "pct_tap_water": cw.get("pct_tap_water", 0),
+        "pct_hand_pump": cw.get("pct_hand_pump", 0),
+        "pct_all_weather_road": ct.get("pct_all_weather", 0),
+        "pct_national_hwy": ct.get("pct_national_hwy", 0),
+        "pct_mobile_coverage": cc.get("pct_mobile_coverage", 0),
+        "pct_power_domestic": cp.get("pct_domestic", 0),
+        "pct_closed_drainage": cd.get("pct_closed", 0),
+        "pct_no_drainage": cd.get("pct_none", 0),
+        "pct_tsc_covered": cs.get("pct_tsc_covered", 0),
+        "pct_forest": cl.get("pct_forest", 0),
+        "pct_agriculture": cl.get("pct_agriculture", 0),
+        # Interaction
         "hazard_x_exposure": haz.get("combined", 0) * exposure,
         "flood_x_vuln": flood_risk * vuln_combined,
         "dfsi_x_flood": dfsi * flood_risk,
+        "rainfall_x_flood": rainfall_annual * flood_risk / 3000,
+        "rainfall_x_vuln": rainfall_monsoon * vuln_combined / 2000,
+        "low_infra_x_flood": (1 - infra) * flood_risk,
+        "no_water_x_vuln": (1 - cw.get("pct_tap_water", 50) / 100) * vuln_combined,
+        "no_road_x_flood": (1 - ct.get("pct_all_weather", 50) / 100) * flood_risk,
     }
 
 
@@ -247,7 +327,8 @@ def get_habitation(name: str):
             sites = [s for s in data["relocation_sites"] if s["habitation"] == h["name"]]
             ranked_sites = relocation_engine.rank_sites(h, sites)
 
-            features = habitation_to_features(h)
+            dist = _find_district(data, h["district"])
+            features = habitation_to_features(h, dist)
             shap_data = explainer.explain_risk(features)
 
             return {
@@ -255,6 +336,7 @@ def get_habitation(name: str):
                 "ml_features": features,
                 "shap_explanation": shap_data,
                 "relocation_sites": ranked_sites,
+                "census_2011": dist.get("census_2011", {}) if dist else {},
             }
     raise HTTPException(404, f"Habitation '{name}' not found")
 
@@ -271,7 +353,8 @@ def explain_habitation(name: str):
     data = load_data()
     for h in data["habitations"]:
         if h["name"].lower() == name.lower():
-            features = habitation_to_features(h)
+            dist = _find_district(data, h["district"])
+            features = habitation_to_features(h, dist)
             shap_data = explainer.explain_risk(features)
             explanation_text = nlg_engine.explain_risk(h, h["risk"], shap_data)
 
@@ -289,8 +372,23 @@ def explain_habitation(name: str):
                     "explainability": "SHAP TreeExplainer",
                     "method": shap_data.get("method", "shap"),
                 },
+                "census_2011": dist.get("census_2011", {}) if dist else {},
             }
     raise HTTPException(404, f"Habitation '{name}' not found")
+
+
+@router.get("/census/{district_name}", tags=["Census 2011"])
+@cache_response(ttl=600, prefix="census")
+def get_census(district_name: str):
+    """Get Census 2011 data for a district — demographics, education, health, water, transport, power."""
+    data = load_data()
+    dist = _find_district(data, district_name)
+    if not dist:
+        raise HTTPException(404, f"District '{district_name}' not found")
+    return {
+        "district": dist["name"],
+        "census_2011": dist.get("census_2011", {}),
+    }
 
 
 @router.get("/relocation/{habitation_name}", tags=["Relocation"])
@@ -386,7 +484,8 @@ def scenario_simulation(
         else:
             new_band = "monitor"
 
-        features = habitation_to_features(h)
+        dist = _find_district(data, h["district"])
+        features = habitation_to_features(h, dist)
         features["flood_history"] = new_flood
         shap_data = explainer.explain_risk(features)
 
@@ -644,3 +743,324 @@ def invalidate_cache_endpoint(
 
     invalidate_cache(pattern)
     return {"status": "invalidated", "pattern": pattern}
+
+
+# --- DRIE Endpoints ---
+
+@router.get("/drie/analyze/{habitation_name}", tags=["DRIE"])
+def drie_analyze(habitation_name: str):
+    """Full DRIE analysis for a single habitation.
+
+    Runs the complete Dynamic Relocation Intelligence Engine pipeline:
+    hazard → vulnerability → risk → household breakdown → matching → routes → explainability.
+    """
+    data = load_data()
+    hab = None
+    for h in data["habitations"]:
+        if h["name"].lower() == habitation_name.lower():
+            hab = h
+            break
+    if not hab:
+        raise HTTPException(404, f"Habitation '{habitation_name}' not found")
+
+    sites = [s for s in data["relocation_sites"] if s["habitation"] == hab["name"]]
+    return drie_engine.analyze(hab, sites)
+
+
+@router.get("/drie/analyze-all", tags=["DRIE"])
+def drie_analyze_all():
+    """Full DRIE analysis for all habitations with summary."""
+    data = load_data()
+    sites = data["relocation_sites"]
+    return drie_engine.analyze_batch(data["habitations"], sites)
+
+
+@router.get("/drie/household/{habitation_name}", tags=["DRIE"])
+def drie_household(habitation_name: str):
+    """Get household-level vulnerability breakdown for a habitation."""
+    data = load_data()
+    for h in data["habitations"]:
+        if h["name"].lower() == habitation_name.lower():
+            return household_vulnerability_engine.estimate_breakdown(
+                h["population"], h.get("vulnerability", {})
+            )
+    raise HTTPException(404, f"Habitation '{habitation_name}' not found")
+
+
+@router.get("/drie/match/{habitation_name}", tags=["DRIE"])
+def drie_match(habitation_name: str):
+    """Population-to-site matching with real carrying capacity."""
+    data = load_data()
+    hab = None
+    for h in data["habitations"]:
+        if h["name"].lower() == habitation_name.lower():
+            hab = h
+            break
+    if not hab:
+        raise HTTPException(404, f"Habitation '{habitation_name}' not found")
+
+    sites = [s for s in data["relocation_sites"] if s["habitation"] == hab["name"]]
+    ranked = relocation_engine.rank_sites(hab, sites)
+    return matching_engine.allocate(hab, ranked)
+
+
+@router.get("/drie/routes/{habitation_name}", tags=["DRIE"])
+def drie_routes(habitation_name: str):
+    """Route intelligence with primary/backup routes and safety analysis."""
+    data = load_data()
+    hab = None
+    for h in data["habitations"]:
+        if h["name"].lower() == habitation_name.lower():
+            hab = h
+            break
+    if not hab:
+        raise HTTPException(404, f"Habitation '{habitation_name}' not found")
+
+    sites = [s for s in data["relocation_sites"] if s["habitation"] == hab["name"]]
+    if not sites:
+        raise HTTPException(404, "No relocation sites found for this habitation")
+
+    primary = max(sites, key=lambda s: s.get("suitability_score", 0))
+    return route_intelligence_engine.analyze_routes(
+        {"lat": hab["lat"], "lon": hab["lon"]},
+        {"lat": primary["lat"], "lon": primary["lon"]},
+    )
+
+
+@router.post("/drie/simulate", tags=["DRIE"])
+def drie_simulate(params: ScenarioRequest):
+    """Multi-hazard disaster simulation across all habitations."""
+    data = load_data()
+    sim_params = {
+        "rainfall_delta": params.rainfall_delta,
+        "seismic_magnitude": params.seismic_magnitude,
+        "landslide_trigger": params.landslide_trigger,
+        "river_level_rise": params.river_level_rise,
+        "embankment_breach": params.embankment_breach,
+        "population_growth_pct": params.population_growth_pct,
+    }
+    return multi_hazard_simulator.simulate_batch(data["habitations"], sim_params)
+
+
+@router.get("/drie/presets", tags=["DRIE"])
+def drie_presets():
+    """Get predefined simulation presets."""
+    return multi_hazard_simulator.get_presets()
+
+
+@router.post("/drie/report", tags=["DRIE"])
+def drie_report(event_data: dict):
+    """Generate emergency situation report (SitRep)."""
+    return report_generator.generate_sitrep(event_data)
+
+
+@router.get("/drie/report/sitrep", tags=["DRIE"])
+def drie_sitrep():
+    """Generate SitRep for current at-risk habitations."""
+    data = load_data()
+    habitations = data["habitations"]
+    immediate = [h for h in habitations if h["risk"]["band"] == "immediate"]
+    short_term = [h for h in habitations if h["risk"]["band"] == "short_term"]
+
+    event_data = {
+        "timestamp": "2026-09-15T10:00:00",
+        "affected_habitations": [
+            {
+                "name": h["name"],
+                "population": h["population"],
+                "band": h["risk"]["band"],
+                "risk_score": h["risk"]["overall"],
+                "vulnerability": h.get("vulnerability", {}),
+            }
+            for h in immediate + short_term
+        ],
+    }
+    return report_generator.generate_sitrep(event_data)
+
+
+@router.post("/drie/relocation-plan", tags=["DRIE"])
+def drie_relocation_plan(habitation_name: str):
+    """Generate relocation action plan for a habitation."""
+    data = load_data()
+    hab = None
+    for h in data["habitations"]:
+        if h["name"].lower() == habitation_name.lower():
+            hab = h
+            break
+    if not hab:
+        raise HTTPException(404, f"Habitation '{habitation_name}' not found")
+
+    sites = [s for s in data["relocation_sites"] if s["habitation"] == hab["name"]]
+    ranked = relocation_engine.rank_sites(hab, sites)
+    allocation = matching_engine.allocate(hab, ranked)
+    return report_generator.generate_relocation_plan(allocation)
+
+
+# --- Workflow Endpoints ---
+
+@router.get("/workflow/list", tags=["Workflow"])
+def workflow_list(state: Optional[str] = None, item_type: Optional[str] = None):
+    """List workflow items with optional filters."""
+    return workflow_manager.list_items(state=state, item_type=item_type)
+
+
+@router.get("/workflow/{item_id}", tags=["Workflow"])
+def workflow_get(item_id: str):
+    """Get a specific workflow item."""
+    item = workflow_manager.get(item_id)
+    if not item:
+        raise HTTPException(404, f"Workflow item '{item_id}' not found")
+    return item
+
+
+@router.post("/workflow/create", tags=["Workflow"])
+def workflow_create(item_type: str, habitation: str, data: dict = {}):
+    """Create a new workflow item."""
+    return workflow_manager.create(item_type, habitation, data)
+
+
+@router.post("/workflow/transition", tags=["Workflow"])
+def workflow_transition(req: WorkflowTransitionRequest):
+    """Transition a workflow item to a new state."""
+    result = workflow_manager.transition(req.item_id, req.new_state, req.actor, req.note)
+    if "error" in result:
+        raise HTTPException(400, result["error"])
+    return result
+
+
+@router.get("/workflow/stats", tags=["Workflow"])
+def workflow_stats():
+    """Get workflow statistics."""
+    return workflow_manager.stats()
+
+
+# --- Real Rainfall Data Endpoints ---
+
+RAINFALL_DATA = None
+RAINFALL_PATH = Path(__file__).parent.parent.parent / "data" / "assam" / "rainfall_real.json"
+
+
+def load_rainfall():
+    global RAINFALL_DATA
+    if RAINFALL_DATA is None:
+        if not RAINFALL_PATH.exists():
+            raise HTTPException(500, "Rainfall data not ingested. Run rainfall_ingestion.py first.")
+        RAINFALL_DATA = json.loads(RAINFALL_PATH.read_text())
+    return RAINFALL_DATA
+
+
+@router.get("/rainfall/summary", tags=["Rainfall"])
+def rainfall_summary():
+    """Assam-wide rainfall summary with per-district totals."""
+    data = load_rainfall()
+    tel = data.get("telemetry_hourly_rainfall", {})
+    districts = []
+    for dist, d in tel.items():
+        districts.append({
+            "district": dist,
+            "total_mm": d["total_mm"],
+            "station_count": d["station_count"],
+            "max_hourly_mm": d["max_hourly_mm"],
+            "annual_rainfall_mm": d["annual_rainfall_mm"],
+            "lat": d["lat"],
+            "lon": d["lon"],
+        })
+    districts.sort(key=lambda x: x["total_mm"], reverse=True)
+    return {
+        "state": "Assam",
+        "total_districts": len(districts),
+        "total_records": sum(d["n_records"] for d in tel.values()),
+        "districts": districts,
+    }
+
+
+@router.get("/rainfall/district/{name}", tags=["Rainfall"])
+def rainfall_district(name: str):
+    """Detailed rainfall data for a specific district."""
+    data = load_rainfall()
+    tel = data.get("telemetry_hourly_rainfall", {})
+    manual = data.get("manual_daily_rainfall", {})
+    rwl = data.get("river_water_level", {})
+
+    # Match district (case-insensitive)
+    result = None
+    for dist, d in tel.items():
+        if dist.lower() == name.lower():
+            result = d.copy()
+            break
+
+    if not result:
+        # Try manual data
+        for dist, d in manual.items():
+            if dist.lower() == name.lower():
+                result = {
+                    "district": dist,
+                    "station_count": d["station_count"],
+                    "stations": d["stations"],
+                    "total_mm": d["total_mm"],
+                    "max_daily_mm": d["max_daily_mm"],
+                    "n_records": d["n_records"],
+                    "monthly_rainfall_mm": d["monthly_rainfall_mm"],
+                    "source": "manual_daily",
+                }
+                break
+
+    if not result:
+        raise HTTPException(404, f"District '{name}' not found in rainfall data")
+
+    # Attach river data if available
+    for dist, d in rwl.items():
+        if dist.lower() == name.lower():
+            result["river_water_level"] = d
+            break
+
+    return result
+
+
+@router.get("/rainfall/timeseries/{name}", tags=["Rainfall"])
+def rainfall_timeseries(name: str, source: str = "tel"):
+    """Monthly rainfall timeseries for charting.
+
+    source: 'tel' for telemetry hourly, 'manual' for manual daily.
+    """
+    data = load_rainfall()
+    if source == "manual":
+        src = data.get("manual_daily_rainfall", {})
+    else:
+        src = data.get("telemetry_hourly_rainfall", {})
+
+    for dist, d in src.items():
+        if dist.lower() == name.lower():
+            monthly = d.get("monthly_rainfall_mm", {})
+            return {
+                "district": dist,
+                "source": source,
+                "timeseries": [{"month": k, "rainfall_mm": v} for k, v in monthly.items()],
+            }
+
+    raise HTTPException(404, f"District '{name}' not found")
+
+
+@router.get("/rainfall/stations", tags=["Rainfall"])
+def rainfall_stations():
+    """List all rainfall monitoring stations across Assam."""
+    data = load_rainfall()
+    tel = data.get("telemetry_hourly_rainfall", {})
+    stations = []
+    for dist, d in tel.items():
+        for st in d.get("stations", []):
+            stations.append({
+                "station": st,
+                "district": dist,
+                "lat": d["lat"],
+                "lon": d["lon"],
+            })
+    return stations
+
+
+@router.get("/rainfall/river-levels", tags=["Rainfall"])
+def rainfall_river_levels():
+    """River water level data for districts with gauges."""
+    data = load_rainfall()
+    rwl = data.get("river_water_level", {})
+    return list(rwl.values())

@@ -89,10 +89,40 @@ def prepare_features(data):
         flooded_area_pct = dist.get("corrected_flooded_area_pct", 0)
         permanent_water = dist.get("permanent_water_pct", 0)
 
+        # Real IMD rainfall features (matched to nearest station)
+        rr = h.get("real_rainfall", {})
+        rainfall_annual = rr.get("rainfall_annual_mm", 0)
+        rainfall_max_monthly = rr.get("rainfall_max_monthly_mm", 0)
+        rainfall_monsoon = rr.get("rainfall_monsoon_mm", 0)
+        rainfall_monsoon_pct = rr.get("rainfall_monsoon_pct", 0)
+        river_level = rr.get("river_water_level_max_m", 0)
+
+        # Census 2011 district-level data
+        c2011 = dist.get("census_2011", {})
+        c2011_edu = c2011.get("education", {})
+        c2011_health = c2011.get("health", {})
+        c2011_water = c2011.get("water", {})
+        c2011_transport = c2011.get("transport", {})
+        c2011_comm = c2011.get("communication", {})
+        c2011_power = c2011.get("power", {})
+        c2011_land = c2011.get("land_use", {})
+        c2011_drain = c2011.get("drainage", {})
+        c2011_sanit = c2011.get("sanitation", {})
+        sex_ratio = c2011.get("sex_ratio", 0)
+        sc_pct = c2011.get("total_sc", 0) / max(c2011.get("total_population", 1), 1) * 100
+        st_pct = c2011.get("total_st", 0) / max(c2011.get("total_population", 1), 1) * 100
+
         # Interaction features
         hazard_x_exposure = hazard_combined * exposure
         flood_x_vuln = flood * vuln_combined
         dfsi_x_flood = dfsi * flood / 100  # normalize DFSI
+        rainfall_x_flood = rainfall_annual * flood / 3000  # normalize
+        rainfall_x_vuln = rainfall_monsoon * vuln_combined / 2000  # normalize
+
+        # Census interaction features
+        low_infra_x_flood = (1 - infra) * flood  # poor infrastructure + high flood = high risk
+        no_water_x_vuln = (1 - c2011_water.get("pct_tap_water", 50) / 100) * vuln_combined
+        no_road_x_flood = (1 - c2011_transport.get("pct_all_weather", 50) / 100) * flood
 
         feat = {
             # Core hazard (NRSC satellite)
@@ -125,10 +155,50 @@ def prepare_features(data):
             "flood_fatalities": flood_fatalities,
             "flooded_area_pct": flooded_area_pct,
             "permanent_water": permanent_water,
+            # Real IMD rainfall
+            "rainfall_annual_mm": rainfall_annual,
+            "rainfall_max_monthly_mm": rainfall_max_monthly,
+            "rainfall_monsoon_mm": rainfall_monsoon,
+            "rainfall_monsoon_pct": rainfall_monsoon_pct,
+            "river_water_level_max_m": river_level,
+            # Census 2011 - Demographics
+            "sex_ratio": sex_ratio,
+            "sc_pct": sc_pct,
+            "st_pct": st_pct,
+            # Census 2011 - Education
+            "schools_per_village": c2011_edu.get("schools_per_village", 0),
+            "total_schools": c2011_edu.get("total_schools", 0),
+            # Census 2011 - Health
+            "health_facilities_per_village": c2011_health.get("facilities_per_village", 0),
+            "total_health_facilities": c2011_health.get("total_facilities", 0),
+            # Census 2011 - Water
+            "pct_tap_water": c2011_water.get("pct_tap_water", 0),
+            "pct_hand_pump": c2011_water.get("pct_hand_pump", 0),
+            # Census 2011 - Transport
+            "pct_all_weather_road": c2011_transport.get("pct_all_weather", 0),
+            "pct_national_hwy": c2011_transport.get("pct_national_hwy", 0),
+            # Census 2011 - Communication
+            "pct_mobile_coverage": c2011_comm.get("pct_mobile_coverage", 0),
+            # Census 2011 - Power
+            "pct_power_domestic": c2011_power.get("pct_domestic", 0),
+            # Census 2011 - Drainage
+            "pct_closed_drainage": c2011_drain.get("pct_closed", 0),
+            "pct_no_drainage": c2011_drain.get("pct_none", 0),
+            # Census 2011 - Sanitation
+            "pct_tsc_covered": c2011_sanit.get("pct_tsc_covered", 0),
+            # Census 2011 - Land Use
+            "pct_forest": c2011_land.get("pct_forest", 0),
+            "pct_agriculture": c2011_land.get("pct_agriculture", 0),
             # Interaction
             "hazard_x_exposure": hazard_x_exposure,
             "flood_x_vuln": flood_x_vuln,
             "dfsi_x_flood": dfsi_x_flood,
+            "rainfall_x_flood": rainfall_x_flood,
+            "rainfall_x_vuln": rainfall_x_vuln,
+            # Census interactions
+            "low_infra_x_flood": low_infra_x_flood,
+            "no_water_x_vuln": no_water_x_vuln,
+            "no_road_x_flood": no_road_x_flood,
         }
         features.append(feat)
     return features
@@ -159,16 +229,36 @@ FEATURE_NAMES = [
     "flood_waves",
     "flood_village_ratio",
     # IFI-Impacts real data
-    "dfsi",
-    "historical_floods",
-    "avg_flood_duration",
-    "flood_fatalities",
-    "flooded_area_pct",
-    "permanent_water",
+    "dfsi", "historical_floods", "avg_flood_duration", "flood_fatalities",
+    "flooded_area_pct", "permanent_water",
+    # Real IMD rainfall
+    "rainfall_annual_mm", "rainfall_max_monthly_mm", "rainfall_monsoon_mm",
+    "rainfall_monsoon_pct", "river_water_level_max_m",
+    # Census 2011 - Demographics
+    "sex_ratio", "sc_pct", "st_pct",
+    # Census 2011 - Education
+    "schools_per_village", "total_schools",
+    # Census 2011 - Health
+    "health_facilities_per_village", "total_health_facilities",
+    # Census 2011 - Water
+    "pct_tap_water", "pct_hand_pump",
+    # Census 2011 - Transport
+    "pct_all_weather_road", "pct_national_hwy",
+    # Census 2011 - Communication
+    "pct_mobile_coverage",
+    # Census 2011 - Power
+    "pct_power_domestic",
+    # Census 2011 - Drainage
+    "pct_closed_drainage", "pct_no_drainage",
+    # Census 2011 - Sanitation
+    "pct_tsc_covered",
+    # Census 2011 - Land Use
+    "pct_forest", "pct_agriculture",
     # Interaction
-    "hazard_x_exposure",
-    "flood_x_vuln",
-    "dfsi_x_flood",
+    "hazard_x_exposure", "flood_x_vuln", "dfsi_x_flood",
+    "rainfall_x_flood", "rainfall_x_vuln",
+    # Census interactions
+    "low_infra_x_flood", "no_water_x_vuln", "no_road_x_flood",
 ]
 
 
@@ -312,10 +402,17 @@ def main():
             "data_sources": [
                 "NRSC/ISRO Flood Hazard Zonation Atlas (1998-2023)",
                 "India Flood Inventory v4 (IFI-Impacts) - DFSI, flood events, flooded area",
-                "Census 2011 - population demographics",
+                "Census 2011 Village Amenities - 26,395 villages, 35 districts",
+                "IMD Real Rainfall - Telemetry hourly data (2021-2026), 49 stations",
             ],
             "features_with_dfsi": has_dfsi,
             "features_with_flood_history": has_flood_hist,
+            "census_features_added": 17,
+            "census_feature_categories": [
+                "demographics", "education", "health", "water",
+                "transport", "communication", "power", "drainage",
+                "sanitation", "land_use",
+            ],
         },
     }
 

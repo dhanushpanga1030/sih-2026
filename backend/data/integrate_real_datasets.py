@@ -72,6 +72,15 @@ def load_flooded_area():
     return data
 
 
+DISTRICT_ALIASES = {
+    "tamulpur": "nalbari",
+    "bajali": "barpeta",
+    "morigaon": "nagaon",
+    "karbi anglong": "west karbi anglong",
+    "dima hasao": "dima hasao",
+}
+
+
 def normalize_district(name):
     """Normalize district name for fuzzy matching."""
     return name.strip().lower().replace("&", "and").replace("  ", " ")
@@ -80,6 +89,12 @@ def normalize_district(name):
 def match_district(name, candidates):
     """Fuzzy match a district name against candidates."""
     norm = normalize_district(name)
+    # Check aliases first
+    alias = DISTRICT_ALIASES.get(norm)
+    if alias:
+        for c in candidates:
+            if normalize_district(c) == alias:
+                return c
     # Exact match
     for c in candidates:
         if normalize_district(c) == norm:
