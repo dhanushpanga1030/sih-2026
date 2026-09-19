@@ -1,8 +1,10 @@
-const BAND_COLORS: Record<string, string> = {
-  immediate: 'bg-red-600',
-  short_term: 'bg-orange-500',
-  medium_term: 'bg-yellow-500',
-  monitor: 'bg-green-600',
+import { Badge } from '@/components/ui/badge'
+
+const BAND_VARIANTS: Record<string, 'destructive' | 'default' | 'secondary' | 'outline'> = {
+  immediate: 'destructive',
+  short_term: 'default',
+  medium_term: 'secondary',
+  monitor: 'outline',
 }
 
 const BAND_LABELS: Record<string, string> = {
@@ -14,8 +16,8 @@ const BAND_LABELS: Record<string, string> = {
 
 export default function RiskBadge({ band }: { band: string }) {
   return (
-    <span className={`risk-badge ${BAND_COLORS[band] || 'bg-gray-400'}`}>
+    <Badge variant={BAND_VARIANTS[band] || 'secondary'}>
       {BAND_LABELS[band] || band}
-    </span>
+    </Badge>
   )
 }
